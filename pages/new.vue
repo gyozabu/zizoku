@@ -93,20 +93,6 @@
 export default {
   data() {
     return {
-      post: [
-        {
-          userId: 1,
-          title: '朝走る',
-          limitTimeStamp: '2020-12-08 00:00:00',
-          scheduleTimeStamp: '7:00',
-          insertTimeStamp: '2020-02-01 00:00:00',
-          updateTimeStamp: '2020-02-01 00:00:00',
-          successNum: 0,
-          failureNum: 0,
-          successOption: false,
-          failureOption: true
-        }
-      ],
       time: null,
       modal: false,
       dates: false,
