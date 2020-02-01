@@ -5,6 +5,7 @@
         <logo />
         <vuetify-logo />
       </div>
+      <LoginButton />
       <v-card>
         <v-card-title class="headline">
           Welcome to the Vuetify + Nuxt.js template
@@ -64,12 +65,14 @@
 
 <script>
 import Logo from '~/components/Logo.vue'
+import LoginButton from '~/components/LoginButton.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
 export default {
   components: {
     Logo,
-    VuetifyLogo
+    VuetifyLogo,
+    LoginButton
   }
 }
 </script>
