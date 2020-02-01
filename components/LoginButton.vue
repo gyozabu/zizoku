@@ -1,21 +1,11 @@
 <template>
-  <v-btn small color="primary">bvv</v-btn>
+  <v-btn @click="login" small color="primary">bvv</v-btn>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import firebase from '~/plugins/firebase'
 
 export default {
-  computed: {
-    ...mapState(['user'])
-  },
-  mounted() {
-    // console.log(this.user)
-    setTimeout(() => {
-      // console.log(this.user)
-    })
-  },
   methods: {
     login() {
       const provider = new firebase.auth.TwitterAuthProvider()

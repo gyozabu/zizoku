@@ -2,30 +2,24 @@
   <div>
     <!-- ログイン中に表示される画面 -->
     <div v-if="isAuthenticated">
-      {{ user.email }}でログイン中です<br />
+      {{ user }}でログイン中です<br />
       <button v-on:click="logout">ログアウト</button><br />
-      <a href="/member-page">メンバーページへ</a>
     </div>
     <!-- ログインしていない時に表示される画面 -->
     <div v-else>
-      メール<br />
-      <input v-model="email" type="text" /><br />
-      パスワード<br />
-      <input v-model="password" type="password" /><br />
-      <button v-on:click="login">ログイン</button>
+      <LoginButton />
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
+import LoginButton from '~/components/LoginButton.vue'
 import firebase from '~/plugins/firebase'
+
 export default {
-  data() {
-    return {
-      email: '',
-      password: ''
-    }
+  components: {
+    LoginButton
   },
   computed: {
     ...mapState(['user']),
@@ -38,19 +32,6 @@ export default {
   },
   methods: {
     ...mapActions(['setUser']),
-    login() {
-      const provider = new firebase.auth.TwitterAuthProvider()
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then((user) => {
-          // ログインしたら飛ぶページを指定
-          // this.$router.push("/member-page")
-        })
-        .catch((error) => {
-          alert(error)
-        })
-    },
     logout() {
       firebase
         .auth()
