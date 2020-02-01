@@ -6,16 +6,23 @@
     <div class="text-center mb-12">
       <v-btn large color="primary" dark>持続をpostする!!</v-btn>
     </div>
-    <h1 class="text-center">みんなのzizoku</h1>
-    <div v-for="(post, post_index) in posts" :key="post_index">{{ name }}</div>
+    <h1 class="text-center mb-5">みんなのzizoku</h1>
+
+    <div :key="index" v-for="(post, index) in posts" class="card">
+      <post-card :post="post" class="mt-8 mb-8" />
+    </div>
   </v-layout>
 </template>
 
 <script>
+import PostCard from '~/components/PostCard.vue'
+
 export default {
+  components: {
+    PostCard
+  },
   data() {
     return {
-      items: ['更新順', 'いいね数順'],
       posts: [
         {
           userId: 1, // ユーザーID
