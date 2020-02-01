@@ -6,8 +6,19 @@
       </v-icon>
       {{ post.title }}
     </v-card-title>
-    <v-card-subtitle>
-      毎日{{ post.scheduleTimeStamp }}, {{ post.limitTimeStamp }}まで
+    <v-card-subtitle class="subtitle">
+      <p class="text">
+        <v-icon class="icon" small>mdi-timer</v-icon>
+        <span>{{ post.scheduleTimeStamp }}</span>
+      </p>
+      <p class="text">
+        <v-icon class="icon" small>mdi-calendar</v-icon>
+        <span>
+          {{ shownDate(post.insertTimeStamp) }}
+          ~
+          {{ shownDate(post.limitTimeStamp) }}
+        </span>
+      </p>
     </v-card-subtitle>
     <v-card-text class="post-result">
       <div class="count">
@@ -95,6 +106,8 @@
   </v-card>
 </template>
 <script>
+import { format } from 'date-fns'
+
 export default {
   props: {
     post: {
@@ -132,6 +145,10 @@ export default {
     })
   },
   methods: {
+    shownDate(timestamp) {
+      const limitDate = new Date(timestamp.replace(/\s.*/g, ''))
+      return format(limitDate, 'yyyy年M月d日')
+    },
     toggleEditor() {
       this.isOpenEditor = !this.isOpenEditor
     },
@@ -152,6 +169,14 @@ export default {
 .post-card {
   > .title > .icon {
     margin-right: 5px;
+  }
+  > .subtitle > .text {
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+  > .subtitle > .text > .icon {
+    margin-right: 3px;
   }
   > .actions {
     padding: 0 16px 16px;
