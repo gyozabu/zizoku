@@ -23,7 +23,7 @@
         v-for="post in shownPosts"
         class="card col-xs-12 col-md-6 "
       >
-        <post-card :post="post" mode="edit" />
+        <post-card :post="post" :photo-url="photoUrl" mode="edit" />
       </div>
     </div>
   </div>
@@ -120,6 +120,10 @@ export default {
       return title
         ? filteringPosts.filter((x) => x.title.match(regExp))
         : filteringPosts
+    },
+    photoUrl() {
+      if (!this.user || !this.user.photoURL) return ''
+      return this.user.photoURL.replace('normal', '80x80')
     }
   }
 }
