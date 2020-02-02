@@ -7,7 +7,7 @@
     <div class="text-center mb-12">
       <!-- ログイン中 -->
       <div v-if="isAuthenticated">
-        <v-btn v-bind:href="mypageUrl" x-large color="primary" dark
+        <v-btn v-bind:href="/users/ + user.uid" x-large color="primary" dark
           ><v-icon class="mr-3" dark>mdi-format-list-bulleted-square</v-icon
           >マイページを見る</v-btn
         >
@@ -44,7 +44,6 @@ export default {
   data() {
     return {
       mv: MainVisual,
-      mypageUrl: '/new',
       posts: [
         {
           userId: 1, // ユーザーID
