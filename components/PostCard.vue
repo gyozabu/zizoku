@@ -154,10 +154,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    photoUrl: {
-      type: String,
-      default: ''
-    },
     mode: {
       type: String,
       default: 'readonly'
@@ -230,10 +226,14 @@ export default {
       const scheduleTime = this.edit.scheduleTimeStamp
       if (!scheduleTime) return ''
       return scheduleTime.replace(/^0/, '')
+    },
+    photoUrl() {
+      const photoUrl =
+        this.post && this.post.user.photoURL ? this.post.user.photoURL : ''
+      return photoUrl.replace('normal', '80x80')
     }
   },
   created() {
-    if (this.mode === 'readonly') return
     const keys = Object.keys(this.edit)
     Object.entries(this.post).forEach(([key, value]) => {
       if (keys.find((k) => k === key)) this.edit[key] = value

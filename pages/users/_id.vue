@@ -19,11 +19,11 @@
     </div>
     <main class="list">
       <div
-        :key="post.title + index"
-        v-for="(post, index) in shownPosts"
+        :key="post.id"
+        v-for="post in shownPosts"
         class="card col-xs-12 col-md-6 "
       >
-        <post-card :post="post" :photo-url="shownUser.photoUrl" :mode="mode" />
+        <post-card :post="post" :mode="mode" />
       </div>
     </main>
     <v-btn
@@ -64,11 +64,6 @@ export default {
       },
       mode: 'edit',
       posts: null,
-      shownUser: {
-        id: null,
-        photoUrl: null,
-        twitterId: null
-      },
       isOpenAddTaskDialog: false
     }
   },
@@ -93,30 +88,23 @@ export default {
       return title
         ? filteringPosts.filter((x) => x.title.match(regExp))
         : filteringPosts
-    },
-    photoUrl() {
-      if (!this.user || !this.user.photoURL) return ''
-      return this.user.photoURL.replace('normal', '80x80')
     }
   },
   async created() {
     this.$nuxt.$on('close', () => {
       this.closeAddTaskDialog()
     })
-    this.shownUser.id = this.$route.params.id
 
     const db = firebase.firestore()
     const userDoc = await db
       .collection('user')
-      .doc(this.shownUser.id)
+      .doc(this.$route.params.id)
       .get()
-    const { twitterId, photoURL } = userDoc.data()
-    this.shownUser.twitterId = twitterId
-    this.shownUser.photoUrl = photoURL.replace('normal', '80x80')
+    const user = userDoc.data()
 
     const postDoc = await db
       .collection('post')
-      .where('userId', '==', this.shownUser.id)
+      .where('userId', '==', this.$route.params.id)
       .get()
 
     this.posts = postDoc.docs.map((doc) => {
@@ -137,6 +125,7 @@ export default {
 
       return {
         id,
+        user,
         ...data,
         insertTimeStamp,
         limitTimeStamp,
