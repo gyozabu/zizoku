@@ -5,8 +5,9 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer app absolute>
-      <span>&copy; zizoku</span>
+    <v-footer class="d-flex justify-center pt-4 pb-4" app absolute>
+      <span class="subtitle-2 mr-2">&copy; zizoku</span>
+      <a v-bind:href="rulesUrl" class="caption">利用規約</a>
     </v-footer>
   </v-app>
 </template>
@@ -18,7 +19,8 @@ import firebase from '~/plugins/firebase'
 export default {
   data() {
     return {
-      userURL: ''
+      userURL: '',
+      rulesUrl: '/rules'
     }
   },
   mounted() {
