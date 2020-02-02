@@ -129,7 +129,7 @@ export default {
     post() {
       const db = firebase.firestore().collection('post')
       const taskData = {
-        user: this.user.uid,
+        userId: this.user.uid,
         title: this.title,
         scheduleTimeStamp: this.scheduleTime,
         limitTimeStamp: this.limitTime,
