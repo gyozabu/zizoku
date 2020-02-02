@@ -80,7 +80,7 @@ export default {
 <style lang="scss" scoped>
 .index {
   &__mv {
-    width: 450px;
+    max-width: 450px;
     margin: auto;
   }
 
