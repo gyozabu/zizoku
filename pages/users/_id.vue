@@ -23,14 +23,15 @@
         v-for="post in shownPosts"
         class="card col-xs-12 col-md-6 "
       >
-        <post-card :post="post" :photo-url="photoUrl" mode="edit" />
+        <post-card :post="post" :photo-url="shownUser.photoUrl" :mode="mode" />
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import PostCard from '~/components/PostCard'
+import firebase from '~/plugins/firebase'
 
 export default {
   components: {
@@ -39,64 +40,17 @@ export default {
   data() {
     return {
       form: {
-        title: '',
+        title: null,
         done: true,
         notDone: true
       },
-      posts: [
-        {
-          userId: 1,
-          title: '朝走る',
-          limitTimeStamp: '2020-12-08 00:00:00',
-          scheduleTimeStamp: '7:00',
-          insertTimeStamp: '2020-02-01 00:00:00',
-          updateTimeStamp: '2020-02-01 00:00:00',
-          successNum: 1000,
-          failureNum: 10000,
-          successOption: true,
-          failureOption: false,
-          done: true
-        },
-        {
-          userId: 1,
-          title: '夜ごはん食べる',
-          limitTimeStamp: '2020-12-08 00:00:00',
-          scheduleTimeStamp: '20:00',
-          insertTimeStamp: '2020-02-01 00:00:00',
-          updateTimeStamp: '2020-02-01 00:00:00',
-          successNum: 0,
-          failureNum: 0,
-          successOption: true,
-          failureOption: false,
-          done: false
-        },
-        {
-          userId: 1,
-          title: 'とてもとてもとてもとても長いなにか達成したいことが書いてある',
-          limitTimeStamp: '2020-12-08 00:00:00',
-          scheduleTimeStamp: '23:00',
-          insertTimeStamp: '2020-02-01 00:00:00',
-          updateTimeStamp: '2020-02-01 00:00:00',
-          successNum: 5,
-          failureNum: 0,
-          successOption: true,
-          failureOption: false,
-          done: true
-        },
-        {
-          userId: 1,
-          title: '腹筋する',
-          limitTimeStamp: '2020-12-08 00:00:00',
-          scheduleTimeStamp: '23:00',
-          insertTimeStamp: '2020-02-01 00:00:00',
-          updateTimeStamp: '2020-02-01 00:00:00',
-          successNum: 3,
-          failureNum: 3,
-          successOption: true,
-          failureOption: false,
-          done: false
-        }
-      ]
+      mode: 'readonly',
+      posts: null,
+      shownUser: {
+        id: null,
+        photoUrl: null,
+        twitterId: null
+      }
     }
   },
   computed: {
@@ -125,6 +79,42 @@ export default {
       if (!this.user || !this.user.photoURL) return ''
       return this.user.photoURL.replace('normal', '80x80')
     }
+  },
+  mounted() {
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   if (user) this.setUser(user)
+    // })
+
+    // const myUserId = this.user ? this.user.uid : null
+    this.shownUser.id = this.$route.params.id
+    // if (myUserId && this.shownUser.id === myUserId) this.mode = 'edit'
+
+    const db = firebase.firestore()
+
+    db.collection('user')
+      .doc('aaa')
+      .get()
+      .then((doc) => {
+        console.log('ddd')
+        console.log(doc.data())
+        console.log('bbb')
+      })
+      .catch((e) => {
+        console.log('eee')
+        console.log(e)
+        console.log('aaaa')
+      })
+    console.log('cccc')
+    // db.collection('user')
+    //   .doc(this.shownUser.id)
+    //   .get()
+    //   .then((doc) => {
+    //     console.log(744)
+    //     console.log(doc.data())
+    //   })
+  },
+  methods: {
+    ...mapActions(['setUser'])
   }
 }
 </script>
