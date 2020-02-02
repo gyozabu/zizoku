@@ -5,14 +5,14 @@
       設定した「持続」を応援するサイトです。持続が失敗すると設定したツイートを流す事で、zizokuを支援しています。
     </p>
     <div class="text-center mb-12">
-      <!-- ログイン中に表示される画面 -->
+      <!-- ログイン中 -->
       <div v-if="isAuthenticated">
         <v-btn v-bind:href="mypageUrl" x-large color="primary" dark
           ><v-icon class="mr-3" dark>mdi-format-list-bulleted-square</v-icon
           >マイページを見る</v-btn
         >
       </div>
-      <!-- ログインしていない時に表示される画面 -->
+      <!-- ログインしていない -->
       <div v-else>
         <LoginButton />
       </div>
