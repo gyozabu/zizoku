@@ -1,8 +1,24 @@
 <template>
   <div class="post-list-component">
-    <div class="form"></div>
+    <div class="form">
+      <v-text-field
+        v-model="form.title"
+        placeholder="達成したいことで検索"
+        outlined
+        rounded
+        dense
+        clearable
+        clear-icon
+      />
+      <v-checkbox v-model="form.done" label="完了" />
+      <v-checkbox v-model="form.notDone" label="未完了" />
+    </div>
     <div class="list">
-      <div :key="index" v-for="(post, index) in posts" class="card">
+      <div
+        :key="'card-' + index"
+        v-for="(post, index) in shownPosts"
+        class="card"
+      >
         <post-card :post="post" mode="edit" />
       </div>
     </div>
@@ -17,6 +33,11 @@ export default {
   },
   data() {
     return {
+      form: {
+        title: '',
+        done: true,
+        notDone: true
+      },
       posts: [
         {
           userId: 1,
@@ -51,7 +72,7 @@ export default {
           scheduleTimeStamp: '23:00',
           insertTimeStamp: '2020-02-01 00:00:00',
           updateTimeStamp: '2020-02-01 00:00:00',
-          successNum: 0,
+          successNum: 5,
           failureNum: 0,
           successOption: true,
           failureOption: false,
@@ -64,20 +85,43 @@ export default {
           scheduleTimeStamp: '23:00',
           insertTimeStamp: '2020-02-01 00:00:00',
           updateTimeStamp: '2020-02-01 00:00:00',
-          successNum: 0,
-          failureNum: 0,
+          successNum: 3,
+          failureNum: 3,
           successOption: true,
           failureOption: false,
-          done: true
+          done: false
         }
       ]
+    }
+  },
+  computed: {
+    shownPosts() {
+      const posts = this.posts
+      if (!posts) return []
+
+      const { done, notDone, title } = this.form
+      const filteringPosts =
+        done && notDone
+          ? posts
+          : done && !notDone
+          ? posts.filter((x) => x.done)
+          : !done && notDone
+          ? posts.filter((x) => !x.done)
+          : []
+
+      const regExp = new RegExp(title, 'g')
+      return title
+        ? filteringPosts.filter((x) => x.title.match(regExp))
+        : filteringPosts
     }
   }
 }
 </script>
 <style lang="scss">
 .post-list-component {
-  > .list {
+  > .form {
+    display: flex;
+    align-items: center;
   }
   > .list > .card {
     margin: 5px;
