@@ -111,10 +111,6 @@
             <span class="text">達成できなかった時ツイートする</span>
             <v-switch v-model="edit.failureOption" class="switch" inset />
           </div>
-          <v-btn class="option -delete" outlined>
-            <v-icon left>mdi-delete</v-icon>
-            削除する
-          </v-btn>
         </div>
       </v-expand-transition>
     </template>
@@ -182,6 +178,10 @@ export default {
     const keys = Object.keys(this.edit)
     Object.entries(this.post).forEach(([key, value]) => {
       if (keys.find((k) => k === key)) this.edit[key] = value
+      if (key === 'limitTimeStamp') {
+        const limitDate = new Date(value.replace(/\s.*/g, ''))
+        this.edit[key] = format(limitDate, 'yyyy-MM-dd')
+      }
     })
   },
   methods: {
@@ -244,6 +244,9 @@ export default {
       display: flex;
       align-items: top;
       justify-content: space-between;
+    }
+    &.-tweet:last-child {
+      height: 30px;
     }
     &.-delete {
       display: block;
