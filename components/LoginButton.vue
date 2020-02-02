@@ -1,5 +1,7 @@
 <template>
-  <v-btn @click="login" small color="primary">bvv</v-btn>
+  <v-btn @click="login" x-large color="primary" dark
+    ><v-icon class="mr-3" dark>mdi-twitter</v-icon>Twitterでログインする</v-btn
+  >
 </template>
 
 <script>
