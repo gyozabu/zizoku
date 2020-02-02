@@ -17,7 +17,7 @@
         <v-checkbox v-model="form.notDone" class="input" label="未完了" />
       </div>
     </div>
-    <div class="list">
+    <main class="list">
       <div
         :key="post.title"
         v-for="post in shownPosts"
@@ -25,18 +25,35 @@
       >
         <post-card :post="post" :photo-url="shownUser.photoUrl" :mode="mode" />
       </div>
-    </div>
+    </main>
+    <v-btn
+      @click="openAddTaskDialog"
+      fab
+      dark
+      fixed
+      large
+      bottom
+      right
+      color="primary"
+    >
+      <v-icon dark>mdi-plus</v-icon>
+    </v-btn>
+    <v-dialog v-model="isOpenAddTaskDialog" class="dialog" max-width="600px">
+      <add-new-task class="content" />
+    </v-dialog>
   </div>
 </template>
 <script>
 import { format, getHours, getMinutes } from 'date-fns'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import AddNewTask from '~/components/AddNewTask'
 import PostCard from '~/components/PostCard'
 import firebase from '~/plugins/firebase'
 
 export default {
   components: {
-    PostCard
+    PostCard,
+    AddNewTask
   },
   data() {
     return {
@@ -51,7 +68,8 @@ export default {
         id: null,
         photoUrl: null,
         twitterId: null
-      }
+      },
+      isOpenAddTaskDialog: false
     }
   },
   computed: {
@@ -82,6 +100,9 @@ export default {
     }
   },
   async created() {
+    this.$nuxt.$on('close', () => {
+      this.closeAddTaskDialog()
+    })
     this.shownUser.id = this.$route.params.id
 
     const db = firebase.firestore()
@@ -123,7 +144,13 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['setUser'])
+    ...mapActions(['setUser']),
+    openAddTaskDialog() {
+      this.isOpenAddTaskDialog = true
+    },
+    closeAddTaskDialog() {
+      this.isOpenAddTaskDialog = false
+    }
   }
 }
 </script>

@@ -130,7 +130,6 @@
   </v-card>
 </template>
 <script>
-import { format } from 'date-fns'
 import PieChart from './PieChart'
 
 export default {
@@ -217,10 +216,6 @@ export default {
     })
   },
   methods: {
-    shownDate(timestamp) {
-      const limitDate = new Date(timestamp.replace(/\s.*/g, ''))
-      return format(limitDate, 'yyyy年M月d日')
-    },
     toggleEditor() {
       this.isOpenEditor = !this.isOpenEditor
     },
