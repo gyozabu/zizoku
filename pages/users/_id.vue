@@ -18,13 +18,18 @@
       </div>
     </div>
     <div class="list">
-      <div :key="post.title" v-for="post in shownPosts" class="card">
+      <div
+        :key="post.title"
+        v-for="post in shownPosts"
+        class="card col-xs-12 col-md-6 "
+      >
         <post-card :post="post" mode="edit" />
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState, mapGetters } from 'vuex'
 import PostCard from '~/components/PostCard'
 
 export default {
@@ -95,6 +100,8 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
+    ...mapGetters(['isAuthenticated']),
     shownPosts() {
       const posts = this.posts
       if (!posts) return []
@@ -131,6 +138,10 @@ export default {
     &:first-child {
       margin-left: 23px;
     }
+  }
+  > .list {
+    display: flex;
+    flex-wrap: wrap;
   }
   > .list > .card {
     margin: 10px 0;
