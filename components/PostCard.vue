@@ -1,12 +1,21 @@
 <template>
   <v-card raised class="post-card">
     <v-card-title class="title">
-      <v-icon v-if="mode === 'edit' && edit.done" class="icon" color="success">
-        mdi-check-circle
-      </v-icon>
+      <v-scroll-x-transition>
+        <v-icon
+          v-if="mode === 'edit' && edit.done"
+          class="icon"
+          color="success"
+        >
+          mdi-check-circle
+        </v-icon>
+      </v-scroll-x-transition>
       {{ post.title }}
     </v-card-title>
-    <v-card-subtitle class="subtitle">
+    <v-card-subtitle
+      :class="{ '-has-data': post.successNum || post.failureNum }"
+      class="subtitle"
+    >
       <p class="text">
         <v-icon class="icon" small>mdi-timer</v-icon>
         <span>{{ post.scheduleTimeStamp }}</span>
@@ -54,7 +63,14 @@
       <v-expand-transition>
         <div v-show="isOpenEditor" class="post-option">
           <div class="option -title">
-            <v-text-field v-model="edit.title" label="達成したいこと" />
+            <v-form :valid="form.name.valid">
+              <v-text-field
+                v-model="edit.title"
+                :rules="form.name.rules"
+                label="達成したいこと"
+                required
+              />
+            </v-form>
           </div>
           <div class="option -schedule-time">
             <v-text-field
@@ -106,8 +122,10 @@
 </template>
 <script>
 import { format } from 'date-fns'
+import PieChart from './PieChart'
 
 export default {
+  components: { PieChart },
   props: {
     post: {
       type: Object,
@@ -132,10 +150,33 @@ export default {
         successOption: null,
         failureOption: null,
         done: null
+      },
+      form: {
+        name: {
+          rules: [(v) => !!v || '達成したいことは必ず入力してください'],
+          valid: true
+        }
+      },
+      options: {}
+    }
+  },
+  computed: {
+    dataCollection() {
+      return {
+        labels: [
+          `達成できた数 ${this.post.successNum}`,
+          `達成できなかった数 ${this.post.failureNum}`
+        ],
+        datasets: [
+          {
+            label: 'aaa',
+            data: [this.post.successNum, this.post.failureNum],
+            backgroundColor: ['#66BB6A', '#EF5350']
+          }
+        ]
       }
     }
   },
-  computed: {},
   created() {
     if (this.mode === 'readonly') return
     const keys = Object.keys(this.edit)
@@ -160,14 +201,21 @@ export default {
     changeStatusDone() {
       if (this.edit.done) return
       this.edit.done = true
+      this.post.successNum = this.post.successNum + 1 // TODO
     }
   }
 }
 </script>
 <style lang="scss">
 .post-card {
+  > .title {
+    display: block;
+  }
   > .title > .icon {
-    margin-right: 5px;
+    padding-bottom: 3px;
+  }
+  > .subtitle.-has-data {
+    padding-bottom: 10px;
   }
   > .subtitle > .text {
     margin: 0;
@@ -177,21 +225,15 @@ export default {
   > .subtitle > .text > .icon {
     margin-right: 3px;
   }
+  > .content > .chart {
+    width: 180px;
+    height: 180px;
+  }
+  > .content > .text {
+    margin: 0;
+  }
   > .actions {
     padding: 0 16px 16px;
-  }
-}
-
-.post-result {
-  display: flex;
-
-  > .count > .text {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-  }
-  > .count > .text > .subject {
-    margin-right: 30px;
   }
 }
 
