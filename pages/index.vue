@@ -1,78 +1,56 @@
 <template>
-  <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <LoginButton />
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
-          </p>
-          <p>
-            For more information on Vuetify, check out the
-            <a href="https://vuetifyjs.com" target="_blank"> documentation </a>.
-          </p>
-          <p>
-            If you have questions, please join the official
-            <a href="https://chat.vuetifyjs.com/" target="_blank" title="chat">
-              discord </a
-            >.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              title="contribute"
-            >
-              issue board </a
-            >.
-          </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing
-            more exciting features in the future.
-          </p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3" />
-          <a href="https://nuxtjs.org/" target="_blank">
-            Nuxt Documentation
-          </a>
-          <br />
-          <a href="https://github.com/nuxt/nuxt.js" target="_blank">
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire">
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
+  <v-layout column justify-center>
+    <p class="text-center mt-12 mb-12">
+      設定した「持続」を応援するサイトです。持続が失敗すると設定したツイートを流す事で、zizokuを支援しています。
+    </p>
+    <div class="text-center mb-12">
+      <v-btn large color="primary" dark>持続をpostする!!</v-btn>
+    </div>
+    <h1 class="text-center mb-5">みんなのzizoku</h1>
+
+    <div :key="index" v-for="(post, index) in posts" class="card">
+      <post-card :post="post" class="mt-8 mb-8" />
+    </div>
   </v-layout>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import LoginButton from '~/components/LoginButton.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
+import PostCard from '~/components/PostCard.vue'
 export default {
   components: {
-    Logo,
-    VuetifyLogo,
-    LoginButton
+    PostCard
+  },
+  data() {
+    return {
+      posts: [
+        {
+          userId: 1, // ユーザーID
+          title: '朝走る', // やること
+          limitTimeStamp: '2020-12-08 00:00:00', // いつまで続けるか
+          scheduleTimeStamp: '7:00', // 何時に設定するか
+          insertTimeStamp: '2020-02-01 00:00:00', // 登録日時
+          updateTimeStamp: '2020-02-01 00:00:00', // 更新日時
+          successNum: 0, // 成功数
+          failureNum: 0, // 失敗数
+          successOption: false, // ツイートしない
+          failureOption: true, // ツイートする
+          done: true // やった
+        },
+        {
+          userId: 1,
+          title: '早く起きる',
+          limitTimeStamp: '2020-12-08 00:00:00',
+          scheduleTimeStamp: '7:00',
+          insertTimeStamp: '2020-02-01 00:00:00',
+          updateTimeStamp: '2020-02-01 00:00:00',
+          successNum: 0,
+          failureNum: 0,
+          successOption: false,
+          failureOption: true,
+          done: true
+        }
+      ]
+    }
   }
 }
 </script>
