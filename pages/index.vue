@@ -5,13 +5,17 @@
       設定した「持続」を応援するサイトです。持続が失敗すると設定したツイートを流す事で、zizokuを支援しています。
     </p>
     <div class="text-center mb-12">
-      <v-btn x-large class="mr-6" color="primary" dark
-        ><v-icon dark>mdi-pencil</v-icon>持続をpostする</v-btn
-      >
-      <v-btn x-large color="primary" dark
-        ><v-icon dark>mdi-format-list-bulleted-square</v-icon
-        >マイページを見る</v-btn
-      >
+      <!-- ログイン中に表示される画面 -->
+      <div v-if="isAuthenticated">
+        <v-btn v-bind:href="mypageUrl" x-large color="primary" dark
+          ><v-icon class="mr-3" dark>mdi-format-list-bulleted-square</v-icon
+          >マイページを見る</v-btn
+        >
+      </div>
+      <!-- ログインしていない時に表示される画面 -->
+      <div v-else>
+        <LoginButton />
+      </div>
     </div>
 
     <h2 class="index__timelineTitle">みんなのZIZOKU</h2>
@@ -23,17 +27,24 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex'
 import PostCard from '~/components/PostCard.vue'
 import MainVisual from '~/static/zizoku_index_main_logo.svg'
-import Logo from '~/static/zizoku_logo.svg'
+import LoginButton from '~/components/LoginButton.vue'
+
 export default {
   components: {
-    PostCard
+    PostCard,
+    LoginButton
+  },
+  computed: {
+    ...mapState(['user']),
+    ...mapGetters(['isAuthenticated'])
   },
   data() {
     return {
       mv: MainVisual,
-      logo: Logo,
+      mypageUrl: '/new',
       posts: [
         {
           userId: 1, // ユーザーID
