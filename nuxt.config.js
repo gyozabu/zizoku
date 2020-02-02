@@ -15,6 +15,41 @@ export default {
         hid: 'description',
         name: 'description',
         content: process.env.npm_package_description || ''
+      },
+      {
+        hid: 'twitter:card',
+        name: 'twitter:card',
+        content: 'summary'
+      },
+      {
+        hid: 'og:type',
+        property: 'og:type',
+        content: 'website'
+      },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: 'zizoku'
+      },
+      {
+        hid: 'og:url',
+        property: 'og:url',
+        content: 'https://zizoku-9f17b.web.app'
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content: 'zizokuは持続したい事を支援するサイトです'
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: 'https://zizoku-9f17b.web.app/zizoku_icon_white.png'
+      },
+      {
+        hid: 'og:site_name',
+        name: 'og:site_name',
+        content: 'zizoku'
       }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
