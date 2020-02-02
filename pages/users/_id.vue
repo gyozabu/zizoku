@@ -9,9 +9,13 @@
         dense
         clearable
         clear-icon
+        class="textfield"
+        prepend-inner-icon="mdi-feature-search"
       />
-      <v-checkbox v-model="form.done" label="完了" />
-      <v-checkbox v-model="form.notDone" label="未完了" />
+      <div class="checkbox">
+        <v-checkbox v-model="form.done" class="input" label="完了" />
+        <v-checkbox v-model="form.notDone" class="input" label="未完了" />
+      </div>
     </div>
     <div class="list">
       <div
@@ -119,12 +123,21 @@ export default {
 </script>
 <style lang="scss">
 .post-list-component {
-  > .form {
+  > .form > .textfield {
+    height: 30px;
+  }
+  > .form > .checkbox {
     display: flex;
-    align-items: center;
+    height: 50px;
+  }
+  > .form > .checkbox > .input {
+    margin-right: 15px;
+    &:first-child {
+      margin-left: 23px;
+    }
   }
   > .list > .card {
-    margin: 5px;
+    margin: 10px 0;
   }
 }
 </style>
