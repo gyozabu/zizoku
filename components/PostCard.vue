@@ -25,9 +25,9 @@
           <p class="text">
             <v-icon class="icon" small>mdi-calendar</v-icon>
             <span>
-              {{ shownDate(post.insertTimeStamp) }}
+              {{ post.insertTimeStamp }}
               ~
-              {{ shownDate(post.limitTimeStamp) }}
+              {{ post.limitTimeStamp }}
             </span>
           </p>
         </v-list-item-subtitle>
@@ -212,10 +212,8 @@ export default {
     const keys = Object.keys(this.edit)
     Object.entries(this.post).forEach(([key, value]) => {
       if (keys.find((k) => k === key)) this.edit[key] = value
-      if (key === 'limitTimeStamp') {
-        const limitDate = new Date(value.replace(/\s.*/g, ''))
-        this.edit[key] = format(limitDate, 'yyyy-MM-dd')
-      }
+      if (key === 'limitTimeStamp')
+        this.edit[key] = value.replace(/年|月/g, '-').replace(/日/, '')
     })
   },
   methods: {
@@ -235,7 +233,6 @@ export default {
     changeStatusDone() {
       if (this.edit.done) return
       this.edit.done = true
-      this.post.successNum = this.post.successNum + 1 // TODO
     }
   }
 }

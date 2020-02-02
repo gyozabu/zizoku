@@ -29,6 +29,7 @@
   </div>
 </template>
 <script>
+import { format, getHours, getMinutes } from 'date-fns'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import PostCard from '~/components/PostCard'
 import firebase from '~/plugins/firebase'
@@ -44,7 +45,7 @@ export default {
         done: true,
         notDone: true
       },
-      mode: 'readonly',
+      mode: 'edit',
       posts: null,
       shownUser: {
         id: null,
@@ -80,38 +81,46 @@ export default {
       return this.user.photoURL.replace('normal', '80x80')
     }
   },
-  mounted() {
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   if (user) this.setUser(user)
-    // })
-
-    // const myUserId = this.user ? this.user.uid : null
+  async created() {
     this.shownUser.id = this.$route.params.id
-    // if (myUserId && this.shownUser.id === myUserId) this.mode = 'edit'
 
     const db = firebase.firestore()
-
-    db.collection('user')
-      .doc('aaa')
+    const userDoc = await db
+      .collection('user')
+      .doc(this.shownUser.id)
       .get()
-      .then((doc) => {
-        console.log('ddd')
-        console.log(doc.data())
-        console.log('bbb')
-      })
-      .catch((e) => {
-        console.log('eee')
-        console.log(e)
-        console.log('aaaa')
-      })
-    console.log('cccc')
-    // db.collection('user')
-    //   .doc(this.shownUser.id)
-    //   .get()
-    //   .then((doc) => {
-    //     console.log(744)
-    //     console.log(doc.data())
-    //   })
+    const { twitterId, photoURL } = userDoc.data()
+    this.shownUser.twitterId = twitterId
+    this.shownUser.photoUrl = photoURL.replace('normal', '80x80')
+
+    const postDoc = await db
+      .collection('post')
+      .where('userId', '==', this.shownUser.id)
+      .get()
+    this.posts = postDoc.docs.map((doc) => {
+      const data = doc.data()
+      const insertTimeStamp = format(
+        data.insertTimeStamp.toDate(),
+        'yyyy年M月dd日'
+      )
+      const limitTimeStamp = format(
+        data.limitTimeStamp.toDate(),
+        'yyyy年M月dd日'
+      )
+
+      const limitHour = getHours(data.scheduleTimeStamp.toDate())
+      const limitMinute = getMinutes(data.scheduleTimeStamp.toDate())
+        ? getMinutes(data.scheduleTimeStamp.toDate())
+        : '00'
+      const scheduleTimeStamp = `${limitHour}:${limitMinute}`
+
+      return {
+        ...data,
+        insertTimeStamp,
+        limitTimeStamp,
+        scheduleTimeStamp
+      }
+    })
   },
   methods: {
     ...mapActions(['setUser'])
