@@ -1,5 +1,6 @@
 <template>
   <div>
+    <BackToTopButton class="mb-4" />
     <h1 class="mb-4">利用規約</h1>
     <p>
       この利用規約（以下，「本規約」といいます。）が
@@ -135,3 +136,13 @@
     </p>
   </div>
 </template>
+
+<script>
+import BackToTopButton from '~/components/BackToTopButton.vue'
+
+export default {
+  components: {
+    BackToTopButton
+  }
+}
+</script>
