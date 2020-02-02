@@ -19,8 +19,8 @@
     </div>
     <main class="list">
       <div
-        :key="post.title"
-        v-for="post in shownPosts"
+        :key="post.title + index"
+        v-for="(post, index) in shownPosts"
         class="card col-xs-12 col-md-6 "
       >
         <post-card :post="post" :photo-url="shownUser.photoUrl" :mode="mode" />
@@ -118,24 +118,25 @@ export default {
       .collection('post')
       .where('userId', '==', this.shownUser.id)
       .get()
+
     this.posts = postDoc.docs.map((doc) => {
+      const id = doc.id
       const data = doc.data()
       const insertTimeStamp = format(
         data.insertTimeStamp.toDate(),
-        'yyyy年M月dd日'
+        'yyyy年M月d日'
       )
-      const limitTimeStamp = format(
-        data.limitTimeStamp.toDate(),
-        'yyyy年M月dd日'
-      )
+      const limitTimeStamp = format(data.limitTimeStamp.toDate(), 'yyyy-M-d')
 
       const limitHour = getHours(data.scheduleTimeStamp.toDate())
-      const limitMinute = getMinutes(data.scheduleTimeStamp.toDate())
-        ? getMinutes(data.scheduleTimeStamp.toDate())
-        : '00'
+      const limitMinute =
+        getMinutes(data.scheduleTimeStamp.toDate()) < 10
+          ? `0${getMinutes(data.scheduleTimeStamp.toDate())}`
+          : getMinutes(data.scheduleTimeStamp.toDate())
       const scheduleTimeStamp = `${limitHour}:${limitMinute}`
 
       return {
+        id,
         ...data,
         insertTimeStamp,
         limitTimeStamp,

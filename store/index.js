@@ -1,3 +1,7 @@
+import firebase from '~/plugins/firebase'
+
+const db = firebase.firestore()
+
 export const strict = false
 
 export const state = () => ({
@@ -20,6 +24,11 @@ export const actions = {
   },
   setPost({ commit }, payload) {
     commit('setPost', payload)
+  },
+  async updatePost({ commit }, payload) {
+    const { id, data } = payload
+    const postRef = await db.collection('post').doc(id)
+    await postRef.update(data)
   }
 }
 
