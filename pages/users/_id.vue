@@ -18,11 +18,7 @@
       </div>
     </div>
     <div class="list">
-      <div
-        :key="'card-' + index"
-        v-for="(post, index) in shownPosts"
-        class="card"
-      >
+      <div :key="post.title" v-for="post in shownPosts" class="card">
         <post-card :post="post" mode="edit" />
       </div>
     </div>
