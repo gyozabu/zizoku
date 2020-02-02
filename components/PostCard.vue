@@ -20,18 +20,17 @@
         </span>
       </p>
     </v-card-subtitle>
-    <v-card-text class="post-result">
-      <div class="count">
-        <p class="text">
-          <span class="subject">達成できた数</span>
-          <span class="result">{{ post.successNum }}</span>
-        </p>
-        <p class="text">
-          <span class="subject">達成できなかった数</span>
-          <span class="result">{{ post.failureNum }}</span>
-        </p>
-      </div>
-      <div class="graph"></div>
+    <v-card-text class="content">
+      <template v-if="post.successNum || post.failureNum">
+        <pie-chart
+          :chartdata="dataCollection"
+          :options="options"
+          class="chart"
+        />
+      </template>
+      <template v-else>
+        <p class="text">まだ集計データがありません</p>
+      </template>
     </v-card-text>
     <template v-if="mode === 'edit'">
       <v-card-actions class="actions">
