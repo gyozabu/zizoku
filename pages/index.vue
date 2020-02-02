@@ -1,12 +1,20 @@
 <template>
   <v-layout column justify-center>
-    <p class="text-center mt-12 mb-12">
+    <img :src="mv" class="index__mv mb-2" />
+    <p class="text-center mb-4">
       設定した「持続」を応援するサイトです。持続が失敗すると設定したツイートを流す事で、zizokuを支援しています。
     </p>
     <div class="text-center mb-12">
-      <v-btn large color="primary" dark>持続をpostする!!</v-btn>
+      <v-btn x-large class="mr-6" color="primary" dark
+        ><v-icon dark>mdi-pencil</v-icon>持続をpostする</v-btn
+      >
+      <v-btn x-large color="primary" dark
+        ><v-icon dark>mdi-format-list-bulleted-square</v-icon
+        >マイページを見る</v-btn
+      >
     </div>
-    <h1 class="text-center mb-5">みんなのzizoku</h1>
+
+    <h2 class="index__timelineTitle">みんなのZIZOKU</h2>
 
     <div :key="index" v-for="(post, index) in posts" class="card">
       <post-card :post="post" class="mt-8 mb-8" />
@@ -16,12 +24,16 @@
 
 <script>
 import PostCard from '~/components/PostCard.vue'
+import MainVisual from '~/static/zizoku_index_main_logo.svg'
+import Logo from '~/static/zizoku_logo.svg'
 export default {
   components: {
     PostCard
   },
   data() {
     return {
+      mv: MainVisual,
+      logo: Logo,
       posts: [
         {
           userId: 1, // ユーザーID
@@ -54,3 +66,40 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.index {
+  &__mv {
+    width: 450px;
+    margin: auto;
+  }
+
+  &__timelineTitle {
+    position: relative;
+    display: inline-block;
+    padding: 0 55px;
+    width: 290px;
+    margin: auto;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      display: inline-block;
+      width: 45px;
+      height: 2px;
+      border-top: solid 1px black;
+      border-bottom: solid 1px black;
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+    }
+  }
+}
+</style>

@@ -51,9 +51,9 @@
         >
           <template v-slot:activator="{ on }">
             <v-combobox
-              class="pt-0"
               v-model="dates"
               v-on="on"
+              class="pt-0"
               multiple
               chips
               small-chips
