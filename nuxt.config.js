@@ -82,7 +82,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: [['@nuxtjs/google-analytics', { id: 'G-JL8H9WLTRL' }]],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
