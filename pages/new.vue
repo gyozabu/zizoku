@@ -1,74 +1,78 @@
 <template>
   <v-app>
     <v-container fluid class="new">
-      <h2 class="text-center">新しく宣言してみる</h2>
+      <h2 class="text-center mb-6">新しく宣言してみる</h2>
       <v-form>
+        <!-- タイトル（title） -->
         <p class="mb-0">タイトル</p>
         <v-text-field
-          v-model="text"
-          :rules="rule"
+          v-model="title"
+          :rules="titleRules"
           class="pt-0"
-          label=""
           required
         ></v-text-field>
 
+        <!-- 時間（scheduleTimeStamp） -->
         <p class="mb-0">時間</p>
-        <v-dialog
-          ref="dialog"
-          v-model="modal"
+        <v-menu
+          ref="menu"
+          v-model="scheduleTimeMenu"
+          :close-on-content-click="false"
+          :nudge-right="40"
           :return-value.sync="time"
-          persistent
           lazy
+          transition="scale-transition"
+          offset-y
           full-width
-          width="290px"
+          max-width="290px"
+          min-width="290px"
         >
           <template v-slot:activator="{ on }">
             <v-text-field
-              v-model="time"
+              v-model="scheduleTime"
               v-on="on"
               class="pt-0"
               readonly
             ></v-text-field>
           </template>
-          <v-time-picker v-if="modal" v-model="time" full-width>
-            <v-spacer></v-spacer>
-            <v-btn @click="modal = false" flat color="primary">Cancel</v-btn>
-            <v-btn @click="$refs.dialog.save(time)" flat color="primary"
-              >OK</v-btn
-            >
+          <v-time-picker
+            v-if="scheduleTimeMenu"
+            v-model="scheduleTime"
+            @click:menu="$refs.menu.save(scheduleTime)"
+            full-width
+          >
           </v-time-picker>
-        </v-dialog>
+        </v-menu>
 
+        <!-- いつまで（limitTimeStamp） -->
         <p class="mb-0">いつまで</p>
         <v-menu
-          ref="menu"
-          v-model="menu"
+          ref="menu2"
+          v-model="limitTimeMenu"
           :close-on-content-click="false"
-          :return-value.sync="dates"
+          :return-value.sync="date"
           transition="scale-transition"
           offset-y
           min-width="290px"
         >
           <template v-slot:activator="{ on }">
-            <v-combobox
-              class="pt-0"
-              v-model="dates"
+            <v-text-field
+              v-model="limitTime"
               v-on="on"
-              multiple
-              chips
-              small-chips
+              class="pt-0"
               readonly
-            ></v-combobox>
+            ></v-text-field>
           </template>
-          <v-date-picker v-model="dates" multiple no-title scrollable>
+          <v-date-picker v-model="limitTime" no-title scrollable>
             <v-spacer></v-spacer>
-            <v-btn @click="menu = false" text color="primary">Cancel</v-btn>
-            <v-btn @click="$refs.menu.save(dates)" text color="primary"
+            <v-btn @click="menu2 = false" text color="primary">Cancel</v-btn>
+            <v-btn @click="$refs.menu2.save(limitTime)" text color="primary"
               >OK</v-btn
             >
           </v-date-picker>
         </v-menu>
 
+        <!-- ツイートオプション（successOption, failureOption） -->
         <p class="">ツイートオプション</p>
         <v-switch
           v-model="successOption"
@@ -81,22 +85,66 @@
           label="失敗したらツイートする"
         ></v-switch>
 
-        <v-btn color="success">
-          登録する！
-        </v-btn>
+        <v-btn
+          :disabled="!title"
+          @click="post"
+          raised
+          large
+          color="primary accent-4"
+          >登録する！</v-btn
+        >
       </v-form>
     </v-container>
   </v-app>
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from 'vuex'
+import firebase from '~/plugins/firebase'
+
 export default {
   data() {
     return {
-      time: null,
-      modal: false,
-      dates: false,
-      menu: false
+      time: false,
+      date: false,
+      scheduleTimeMenu: false,
+      limitTimeMenu: false,
+      titleRules: [
+        (v) => !!v || 'タイトルは必須です',
+        (v) => (v && v.length <= 20) || 'タイトルは20文字以内で入力してください'
+      ],
+      title: '',
+      limitTime: '',
+      scheduleTime: '',
+      successOption: false,
+      failureOption: false
+    }
+  },
+  computed: {
+    ...mapState(['user']),
+    ...mapGetters(['isAuthenticated'])
+  },
+  methods: {
+    ...mapActions(['setPost']),
+    goback() {
+      this.$router.go(-1)
+    },
+    post() {
+      const db = firebase.firestore().collection('post')
+      const taskData = {
+        user: this.user.uid,
+        title: this.title,
+        scheduleTimeStamp: this.scheduleTime,
+        limitTimeStamp: this.limitTime,
+        insertTimeStam: firebase.firestore.FieldValue.serverTimestamp(),
+        updateTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+        successNum: 0,
+        failureNum: 0,
+        successOption: this.successOption,
+        failureOption: this.failureOption,
+        done: false
+      }
+      db.add(taskData)
     }
   }
 }
