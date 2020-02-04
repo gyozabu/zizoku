@@ -19,15 +19,24 @@
     </div>
 
     <h2 class="index__timelineTitle">みんなのZIZOKU</h2>
-    <main class="index__list">
-      <div
-        :key="post.id"
-        v-for="post in posts"
-        class="index__card col-xs-12 col-md-6"
-      >
-        <post-card :post="post" />
-      </div>
-    </main>
+    <template v-if="posts">
+      <main class="index__list">
+        <div
+          :key="post.id"
+          v-for="post in posts"
+          class="index__card col-xs-12 col-md-6"
+        >
+          <post-card :post="post" />
+        </div>
+      </main>
+    </template>
+    <template v-else>
+      <v-progress-circular
+        class="index__loader"
+        indeterminate
+        color="primary"
+      />
+    </template>
   </v-layout>
 </template>
 
@@ -54,8 +63,11 @@ export default {
   async created() {
     await this.loadPosts()
   },
+  destroyed() {
+    this.clearPosts()
+  },
   methods: {
-    ...mapActions(['loadPosts'])
+    ...mapActions(['loadPosts', 'clearPosts'])
   }
 }
 </script>
@@ -100,6 +112,10 @@ export default {
   }
   &__card {
     margin: 10px 0;
+  }
+  &__loader {
+    margin: 0 auto;
+    padding-top: 200px;
   }
 }
 </style>

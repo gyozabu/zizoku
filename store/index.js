@@ -8,7 +8,7 @@ export const strict = false
 export const state = () => ({
   user: null,
   post: false,
-  posts: []
+  posts: null
 })
 
 export const mutations = {
@@ -72,6 +72,9 @@ export const actions = {
     const { id, data } = payload
     const postRef = await db.collection('post').doc(id)
     await postRef.update(data)
+  },
+  clearPosts({ commit }, payload) {
+    commit('setPosts', null)
   }
 }
 

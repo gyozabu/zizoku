@@ -1,5 +1,10 @@
 <template>
   <div class="post-list-component">
+    <header class="header">
+      <v-btn icon to="/">
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
+    </header>
     <div class="form">
       <v-text-field
         v-model="form.title"
@@ -146,6 +151,9 @@ export default {
 </script>
 <style lang="scss">
 .post-list-component {
+  > .header {
+    margin-bottom: 10px;
+  }
   > .form > .textfield {
     height: 30px;
   }
