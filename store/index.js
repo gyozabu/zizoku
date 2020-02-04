@@ -8,7 +8,8 @@ export const strict = false
 export const state = () => ({
   user: null,
   post: false,
-  posts: null
+  posts: null,
+  userPosts: null
 })
 
 export const mutations = {
@@ -20,6 +21,9 @@ export const mutations = {
   },
   setPosts(state, payload) {
     state.posts = payload
+  },
+  setUserPosts(state, payload) {
+    state.userPosts = payload
   }
 }
 
@@ -67,6 +71,46 @@ export const actions = {
       }
     })
     commit('setPosts', posts)
+  },
+  async loadUserPosts({ commit }, userId) {
+    const userDoc = await db
+      .collection('user')
+      .doc(userId)
+      .get()
+    const user = userDoc.data()
+
+    const postDoc = await db
+      .collection('post')
+      .where('userId', '==', userId)
+      .get()
+
+    const posts = postDoc.docs.map((doc) => {
+      const id = doc.id
+      const data = doc.data()
+      const insertTimeStamp = format(
+        data.insertTimeStamp.toDate(),
+        'yyyy年M月d日'
+      )
+      const limitTimeStamp = format(data.limitTimeStamp.toDate(), 'yyyy-M-d')
+
+      const limitHour = getHours(data.scheduleTimeStamp.toDate())
+      const limitMinute =
+        getMinutes(data.scheduleTimeStamp.toDate()) < 10
+          ? `0${getMinutes(data.scheduleTimeStamp.toDate())}`
+          : getMinutes(data.scheduleTimeStamp.toDate())
+      const scheduleTimeStamp = `${limitHour}:${limitMinute}`
+
+      return {
+        id,
+        user,
+        ...data,
+        insertTimeStamp,
+        limitTimeStamp,
+        scheduleTimeStamp
+      }
+    })
+
+    commit('setUserPosts', posts)
   },
   async updatePost({ commit }, payload) {
     const { id, data } = payload

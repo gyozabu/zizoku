@@ -22,14 +22,24 @@
         <v-checkbox v-model="form.notDone" class="input" label="未完了" />
       </div>
     </div>
-    <main class="list">
-      <div
-        :key="post.id"
-        v-for="post in shownPosts"
-        class="card col-xs-12 col-md-6 "
-      >
-        <post-card :post="post" :mode="mode" />
-      </div>
+    <main :class="{ '-load': !userPosts }" class="list">
+      <template v-if="!userPosts">
+        <v-progress-circular class="loader" indeterminate color="primary" />
+      </template>
+      <template v-else-if="userPosts.length > 0">
+        <div
+          :key="post.id"
+          v-for="post in shownPosts"
+          class="card col-xs-12 col-md-6 "
+        >
+          <post-card :post="post" :mode="mode" />
+        </div>
+      </template>
+      <template v-else>
+        <p class="message">
+          まだ何も登録されていません。さっそく登録してみよう！
+        </p>
+      </template>
     </main>
     <v-btn
       @click="openAddTaskDialog"
@@ -49,11 +59,9 @@
   </div>
 </template>
 <script>
-import { format, getHours, getMinutes } from 'date-fns'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import AddNewTask from '~/components/AddNewTask'
 import PostCard from '~/components/PostCard'
-import firebase from '~/plugins/firebase'
 
 export default {
   components: {
@@ -68,15 +76,14 @@ export default {
         notDone: true
       },
       mode: 'edit',
-      posts: null,
       isOpenAddTaskDialog: false
     }
   },
   computed: {
-    ...mapState(['user']),
+    ...mapState(['user', 'userPosts']),
     ...mapGetters(['isAuthenticated']),
     shownPosts() {
-      const posts = this.posts
+      const posts = this.userPosts
       if (!posts) return []
 
       const { done, notDone, title } = this.form
@@ -96,50 +103,15 @@ export default {
     }
   },
   async created() {
-    this.$nuxt.$on('close', () => {
+    this.$nuxt.$on('close', async () => {
       this.closeAddTaskDialog()
+      await this.loadUserPosts(this.$route.params.id)
     })
 
-    const db = firebase.firestore()
-    const userDoc = await db
-      .collection('user')
-      .doc(this.$route.params.id)
-      .get()
-    const user = userDoc.data()
-
-    const postDoc = await db
-      .collection('post')
-      .where('userId', '==', this.$route.params.id)
-      .get()
-
-    this.posts = postDoc.docs.map((doc) => {
-      const id = doc.id
-      const data = doc.data()
-      const insertTimeStamp = format(
-        data.insertTimeStamp.toDate(),
-        'yyyy年M月d日'
-      )
-      const limitTimeStamp = format(data.limitTimeStamp.toDate(), 'yyyy-M-d')
-
-      const limitHour = getHours(data.scheduleTimeStamp.toDate())
-      const limitMinute =
-        getMinutes(data.scheduleTimeStamp.toDate()) < 10
-          ? `0${getMinutes(data.scheduleTimeStamp.toDate())}`
-          : getMinutes(data.scheduleTimeStamp.toDate())
-      const scheduleTimeStamp = `${limitHour}:${limitMinute}`
-
-      return {
-        id,
-        user,
-        ...data,
-        insertTimeStamp,
-        limitTimeStamp,
-        scheduleTimeStamp
-      }
-    })
+    await this.loadUserPosts(this.$route.params.id)
   },
   methods: {
-    ...mapActions(['setUser']),
+    ...mapActions(['setUser', 'loadUserPosts']),
     openAddTaskDialog() {
       this.isOpenAddTaskDialog = true
     },
@@ -169,10 +141,21 @@ export default {
   }
   > .list {
     display: flex;
-    flex-wrap: wrap;
+
+    &:not(.-load) {
+      flex-wrap: wrap;
+    }
   }
   > .list > .card {
     margin: 10px 0;
+  }
+  > .list > .loader {
+    margin: 0 auto;
+    padding-top: 200px;
+  }
+  > .list > .message {
+    margin-top: 20px;
+    color: rgba(0, 0, 0, 0.6);
   }
 }
 </style>
