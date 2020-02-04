@@ -39,6 +39,7 @@
         v-model="scheduleTime"
         @click:menu="$refs.menu.save(scheduleTime)"
         full-width
+        format="24hr"
       >
       </v-time-picker>
     </v-menu>
@@ -77,11 +78,13 @@
       v-model="successOption"
       class="mt-0"
       label="成功したらツイートする"
+      inset
     ></v-switch>
     <v-switch
       v-model="failureOption"
       class="mt-0"
       label="失敗したらツイートする"
+      inset
     ></v-switch>
 
     <v-btn
@@ -97,6 +100,7 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { convertToTimestamp } from '~/util'
 import firebase from '~/plugins/firebase'
 
 export default {
@@ -126,14 +130,17 @@ export default {
     goback() {
       this.$router.go(-1)
     },
-    post() {
+    async post() {
       const db = firebase.firestore().collection('post')
       const taskData = {
         userId: this.user.uid,
         title: this.title,
-        scheduleTimeStamp: this.scheduleTime,
-        limitTimeStamp: this.limitTime,
-        insertTimeStam: firebase.firestore.FieldValue.serverTimestamp(),
+        scheduleTimeStamp: convertToTimestamp(
+          'scheduleTimeStamp',
+          this.scheduleTime
+        ),
+        limitTimeStamp: convertToTimestamp('limitTimeStamp', this.limitTime),
+        insertTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
         updateTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
         successNum: 0,
         failureNum: 0,
@@ -141,7 +148,7 @@ export default {
         failureOption: this.failureOption,
         done: false
       }
-      db.add(taskData)
+      await db.add(taskData)
       this.$nuxt.$emit('close')
     }
   }
