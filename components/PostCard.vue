@@ -1,5 +1,5 @@
 <template>
-  <v-card raised class="post-card">
+  <v-card raised shaped class="post-card">
     <v-list-item two-line class="header">
       <v-list-item-content class="header-content">
         <v-list-item-title class="title">
@@ -142,10 +142,9 @@
   </v-card>
 </template>
 <script>
-// import { format } from 'date-fns'
 import { mapActions } from 'vuex'
 import PieChart from './PieChart'
-import { convertTimestamp } from '~/util'
+import { convertToTimestamp } from '~/util'
 
 export default {
   components: { PieChart },
@@ -271,7 +270,7 @@ export default {
       this.updatePost({ id, data })
     },
     changeTimeStamp(key) {
-      const timestamp = convertTimestamp(key, this.edit[key])
+      const timestamp = convertToTimestamp(key, this.edit[key])
 
       this.changeOptions(key, timestamp)
       key === 'limitTimeStamp'

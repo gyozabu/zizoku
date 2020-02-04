@@ -1,6 +1,6 @@
 import firebase from '~/plugins/firebase'
 
-export const convertTimestamp = (key, value) => {
+export const convertToTimestamp = (key, value) => {
   const timestamp = firebase.firestore.Timestamp
 
   if (key === 'limitTimeStamp') {
