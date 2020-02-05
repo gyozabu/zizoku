@@ -7,10 +7,16 @@
     <div class="text-center mb-12">
       <!-- ログイン中 -->
       <div v-if="isAuthenticated">
-        <v-btn v-bind:href="/users/ + user.uid" x-large color="primary" dark
-          ><v-icon class="mr-3" dark>mdi-format-list-bulleted-square</v-icon
-          >マイページを見る</v-btn
+        <v-btn
+          :to="{ name: 'users-id', params: { id: user.uid } }"
+          x-large
+          color="primary"
+          dark
+          nuxt
         >
+          <v-icon class="mr-3" dark>mdi-format-list-bulleted-square</v-icon>
+          マイページを見る
+        </v-btn>
       </div>
       <!-- ログインしていない -->
       <div v-else>

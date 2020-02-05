@@ -1,7 +1,7 @@
 <template>
   <div class="post-list-component">
     <header class="header">
-      <v-btn icon to="/">
+      <v-btn icon to="/" nuxt>
         <v-icon>mdi-home</v-icon>
       </v-btn>
     </header>
@@ -124,7 +124,7 @@ export default {
 <style lang="scss">
 .post-list-component {
   > .header {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
   > .form > .textfield {
     height: 30px;
