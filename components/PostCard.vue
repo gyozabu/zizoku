@@ -37,22 +37,13 @@
       </v-list-item-avatar>
     </v-list-item>
     <v-card-text class="content">
-      <template v-if="edit.successNum || edit.failureNum">
-        <pie-chart
-          key="has-data"
-          :chartdata="dataCollection"
-          :options="options"
-          class="chart"
-        />
-      </template>
-      <template v-else>
-        <pie-chart
-          key="no-data"
-          :chartdata="noDataCollection"
-          :options="noDataOptions"
-          class="chart -no-data"
-        />
-      </template>
+      <pie-chart
+        key="has-data"
+        :chart-data="dataCollection"
+        :options="options"
+        :class="{ '-no-data': !edit.successNum && !edit.failureNum }"
+        class="chart"
+      />
     </v-card-text>
     <template v-if="mode === 'edit'">
       <v-card-actions class="actions">
@@ -166,6 +157,7 @@ export default {
       edit: {
         title: null,
         successNum: null,
+        failureNum: null,
         limitTimeStamp: null,
         scheduleTimeStamp: null,
         insertTimeStamp: null,
@@ -179,42 +171,48 @@ export default {
           rules: [(v) => !!v || '達成したいことは必ず入力してください'],
           valid: true
         }
-      },
-      options: {},
-      noDataOptions: {
-        legend: {
-          labels: {
-            boxWidth: 0
-          }
-        }
       }
     }
   },
   computed: {
     dataCollection() {
-      return {
-        labels: [
-          `成功数 ${this.post.successNum}`,
-          `失敗数 ${this.post.failureNum}`
-        ],
-        datasets: [
-          {
-            data: [this.post.successNum, this.post.failureNum],
-            backgroundColor: ['#66BB6A', '#EF5350']
-          }
-        ]
+      const { successNum, failureNum } = this.edit
+      if (successNum || failureNum) {
+        return {
+          labels: [
+            `成功数 ${this.edit.successNum}`,
+            `失敗数 ${this.edit.failureNum}`
+          ],
+          datasets: [
+            {
+              data: [this.edit.successNum, this.edit.failureNum],
+              backgroundColor: ['#66BB6A', '#EF5350']
+            }
+          ]
+        }
+      } else {
+        return {
+          labels: ['まだ集計データがありません'],
+          datasets: [
+            {
+              data: [1],
+              backgroundColor: ['#CFD8DC']
+            }
+          ]
+        }
       }
     },
-    noDataCollection() {
-      return {
-        labels: ['まだ集計データがありません'],
-        datasets: [
-          {
-            data: [1],
-            backgroundColor: ['#CFD8DC']
+    options() {
+      const { successNum, failureNum } = this.edit
+      return successNum || failureNum
+        ? {}
+        : {
+            legend: {
+              labels: {
+                boxWidth: 0
+              }
+            }
           }
-        ]
-      }
     },
     shownLimitDate() {
       const limitDate = this.edit.limitTimeStamp
