@@ -30,7 +30,7 @@
         <div
           :key="post.id"
           v-for="post in posts"
-          class="index__card col-xs-12 col-md-6"
+          class="index__card col-xs-12 col-md-6 col-sm-6"
         >
           <post-card :post="post" />
         </div>

@@ -37,11 +37,25 @@
       </v-list-item-avatar>
     </v-list-item>
     <v-card-text class="content">
+      <div class="task-result">
+        <template v-if="edit.successNum || edit.failureNum">
+          <p class="text -success">
+            <span>成功した数： </span>
+            {{ edit.successNum }}
+          </p>
+          <p class="text -failure">
+            <span>失敗した数： </span>
+            {{ edit.failureNum }}
+          </p>
+        </template>
+        <template v-else>
+          <p class="text -no-data">まだデータがありません</p>
+        </template>
+      </div>
       <pie-chart
         key="has-data"
         :chart-data="dataCollection"
         :options="options"
-        :class="{ '-no-data': !edit.successNum && !edit.failureNum }"
         class="chart"
       />
     </v-card-text>
@@ -171,6 +185,11 @@ export default {
           rules: [(v) => !!v || '達成したいことは必ず入力してください'],
           valid: true
         }
+      },
+      options: {
+        tooltips: {
+          enabled: false
+        }
       }
     }
   },
@@ -179,10 +198,6 @@ export default {
       const { successNum, failureNum } = this.edit
       if (successNum || failureNum) {
         return {
-          labels: [
-            `成功数 ${this.edit.successNum}`,
-            `失敗数 ${this.edit.failureNum}`
-          ],
           datasets: [
             {
               data: [this.edit.successNum, this.edit.failureNum],
@@ -192,7 +207,6 @@ export default {
         }
       } else {
         return {
-          labels: ['まだ集計データがありません'],
           datasets: [
             {
               data: [1],
@@ -201,18 +215,6 @@ export default {
           ]
         }
       }
-    },
-    options() {
-      const { successNum, failureNum } = this.edit
-      return successNum || failureNum
-        ? {}
-        : {
-            legend: {
-              labels: {
-                boxWidth: 0
-              }
-            }
-          }
     },
     shownLimitDate() {
       const limitDate = this.edit.limitTimeStamp
@@ -285,16 +287,14 @@ export default {
     margin-bottom: 5px;
   }
   > .content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
     padding-top: 0;
   }
   > .content > .chart {
-    width: 180px;
-    height: 180px;
-    &.-no-data {
-      width: 160px;
-      height: 160px;
-      margin-top: 20px;
-    }
+    width: 160px;
+    height: 160px;
   }
   > .content > .text {
     margin: 0;
@@ -324,6 +324,33 @@ export default {
   }
   > .subtitle > .text > .icon {
     margin-right: 5px;
+  }
+}
+
+.task-result {
+  margin-left: 5px;
+  > .text {
+    display: flex;
+    align-items: center;
+    &:last-child {
+      margin: 0;
+    }
+    &::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 0.6rem;
+      margin-right: 10px;
+    }
+    &.-success::before {
+      background-color: #66bb6a;
+    }
+    &.-failure::before {
+      background-color: #ef5350;
+    }
+    &.-no-data::before {
+      content: none;
+    }
   }
 }
 
