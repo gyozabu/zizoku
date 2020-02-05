@@ -1,6 +1,6 @@
 <template>
   <v-layout column justify-center>
-    <img :src="mv" class="index__mv mb-2" />
+    <img :src="mv" class="index__mv col-xs-12 col-md-6 col-sm-6 col-lg-4" />
     <p class="text-center mb-4">
       設定した「持続」を応援するサイトです。持続が失敗すると設定したツイートを流す事で、zizokuを支援しています。
     </p>
@@ -81,7 +81,7 @@ export default {
 <style lang="scss" scoped>
 .index {
   &__mv {
-    max-width: 450px;
+    // width: 100%;
     margin: auto;
   }
 

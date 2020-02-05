@@ -14,10 +14,7 @@
           </v-scroll-x-transition>
           {{ edit.title }}
         </v-list-item-title>
-        <v-list-item-subtitle
-          :class="{ '-has-data': post.successNum || post.failureNum }"
-          class="subtitle"
-        >
+        <v-list-item-subtitle class="subtitle">
           <p class="text">
             <v-icon class="icon" small>mdi-timer</v-icon>
             <span>{{ shownScheduleTime }}</span>
@@ -32,7 +29,12 @@
           </p>
         </v-list-item-subtitle>
       </v-list-item-content>
-      <v-list-item-avatar :src="photoUrl" tile size="80">
+      <v-list-item-avatar
+        :src="photoUrl"
+        @click="moveToTwitter"
+        size="80"
+        class="avatar"
+      >
         <v-img :src="photoUrl" />
       </v-list-item-avatar>
     </v-list-item>
@@ -40,16 +42,16 @@
       <div class="task-result">
         <template v-if="edit.successNum || edit.failureNum">
           <p class="text -success">
-            <span>成功した数： </span>
+            <span>成功した： </span>
             {{ edit.successNum }}
           </p>
           <p class="text -failure">
-            <span>失敗した数： </span>
+            <span>失敗した： </span>
             {{ edit.failureNum }}
           </p>
         </template>
         <template v-else>
-          <p class="text -no-data">まだデータがありません</p>
+          <p class="text -no-data">データがありません</p>
         </template>
       </div>
       <pie-chart
@@ -276,12 +278,30 @@ export default {
       key === 'limitTimeStamp'
         ? this.toggleDatePicker()
         : this.toggleTimePicker()
+    },
+    moveToTwitter() {
+      window.open(`https://twitter.com/${this.post.user.twitterId}`)
     }
   }
 }
 </script>
 <style lang="scss">
 .post-card {
+  > .header > .avatar {
+    position: relative;
+    &::after {
+      display: block;
+      position: absolute;
+      width: inherit;
+      height: inherit;
+    }
+    &:hover::after {
+      content: '';
+      cursor: pointer;
+      background-color: #e3f2fd;
+      opacity: 0.25;
+    }
+  }
   > .title {
     display: block;
     margin-bottom: 5px;
@@ -306,15 +326,15 @@ export default {
 }
 
 .header-content {
-  padding-bottom: 0;
+  padding: 0;
+  > .title {
+    margin: 5px 0 8px;
+  }
   > .title > .icon {
     padding-bottom: 3px;
   }
   > .subtitle {
     padding-left: 4px;
-    &.-has-data {
-      padding-bottom: 10px;
-    }
   }
   > .subtitle > .text {
     margin: 0 0 2px 0;
@@ -338,9 +358,9 @@ export default {
     &::before {
       content: '';
       display: block;
-      width: 20px;
+      width: 15px;
       height: 0.6rem;
-      margin-right: 10px;
+      margin-right: 7px;
     }
     &.-success::before {
       background-color: #66bb6a;

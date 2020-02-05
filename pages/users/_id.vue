@@ -22,6 +22,15 @@
         <v-checkbox v-model="form.notDone" class="input" label="未完了" />
       </div>
     </div>
+    <template v-if="userPosts">
+      <p class="message">
+        {{
+          userPosts.length > 0
+            ? shownPosts.length + '件表示中'
+            : 'まだ何も登録されていません。さっそく登録してみよう！'
+        }}
+      </p>
+    </template>
     <main :class="{ '-load': !userPosts }" class="list">
       <template v-if="!userPosts">
         <v-progress-circular class="loader" indeterminate color="primary" />
@@ -34,11 +43,6 @@
         >
           <post-card :post="post" :mode="mode" />
         </div>
-      </template>
-      <template v-else>
-        <p class="message">
-          まだ何も登録されていません。さっそく登録してみよう！
-        </p>
       </template>
     </main>
     <v-btn
@@ -139,6 +143,10 @@ export default {
       margin-left: 23px;
     }
   }
+  > .message {
+    margin: 10px 0 0 24px;
+    color: rgba(0, 0, 0, 0.6);
+  }
   > .list {
     display: flex;
 
@@ -147,15 +155,11 @@ export default {
     }
   }
   > .list > .card {
-    margin: 10px 0;
+    margin: 0 0 10px;
   }
   > .list > .loader {
     margin: 0 auto;
     padding-top: 200px;
-  }
-  > .list > .message {
-    margin-top: 20px;
-    color: rgba(0, 0, 0, 0.6);
   }
 }
 </style>
