@@ -60,6 +60,12 @@
     <v-dialog v-model="isOpenAddTaskDialog" class="dialog" max-width="600px">
       <add-new-task class="content" />
     </v-dialog>
+    <v-snackbar v-model="isOpenSnackbar">
+      登録しました
+      <v-btn @click="closeSnackbar" color="primary" text>
+        とじる
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -80,7 +86,8 @@ export default {
         notDone: true
       },
       mode: 'edit',
-      isOpenAddTaskDialog: false
+      isOpenAddTaskDialog: false,
+      isOpenSnackbar: false
     }
   },
   computed: {
@@ -109,6 +116,7 @@ export default {
   async created() {
     this.$nuxt.$on('close', async () => {
       this.closeAddTaskDialog()
+      this.openSnackbar()
       await this.loadUserPosts(this.$route.params.id)
     })
 
@@ -121,6 +129,12 @@ export default {
     },
     closeAddTaskDialog() {
       this.isOpenAddTaskDialog = false
+    },
+    openSnackbar() {
+      this.isOpenSnackbar = true
+    },
+    closeSnackbar() {
+      this.isOpenSnackbar = false
     }
   }
 }
