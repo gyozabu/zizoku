@@ -80,12 +80,36 @@
       label="成功したらツイートする"
       inset
     ></v-switch>
+    <v-expand-transition>
+      <div
+        v-show="successOption"
+        :class="{ '-open': successOption }"
+        class="hint"
+      >
+        <p class="message">こんなメッセージがツイートされます</p>
+        <div class="ex">
+          <span>🎉今日の{{ title }}を達成できた！！🎉</span>
+        </div>
+      </div>
+    </v-expand-transition>
     <v-switch
       v-model="failureOption"
-      class="mt-0"
+      class="mt-0 switch"
       label="失敗したらツイートする"
       inset
     ></v-switch>
+    <v-expand-transition>
+      <div
+        v-show="failureOption"
+        :class="{ '-open': failureOption }"
+        class="hint"
+      >
+        <p class="message">こんなメッセージがツイートされます</p>
+        <div class="ex">
+          <span>今日の{{ title }}を達成できなかった...</span>
+        </div>
+      </div>
+    </v-expand-transition>
 
     <v-btn
       :disabled="!title"
@@ -159,6 +183,20 @@ export default {
 .new {
   max-width: 653px;
   background-color: #fff;
-  padding: 15px;
+  padding: 20px;
+
+  > .hint.-open {
+    margin-bottom: 30px;
+  }
+  > .hint > .message {
+    margin-bottom: 2px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+  }
+  > .hint > .ex {
+    border: 2px solid rgb(29, 161, 242);
+    border-radius: 5px;
+    padding: 16px;
+  }
 }
 </style>
