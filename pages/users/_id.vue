@@ -39,7 +39,7 @@
         <div
           :key="post.id"
           v-for="post in shownPosts"
-          class="card col-xs-12 col-md-6 col-sm-6"
+          class="card col-xs-12 col-sm-6 col-md-6 col-lg-6"
         >
           <post-card :post="post" :mode="mode" />
         </div>

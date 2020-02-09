@@ -1,8 +1,16 @@
 <template>
   <v-card raised shaped class="post-card">
     <v-list-item two-line class="header">
+      <v-list-item-avatar
+        :src="photoUrl"
+        @click="moveToTwitter"
+        class="avatar"
+        size="60px"
+      >
+        <v-img :src="photoUrl" />
+      </v-list-item-avatar>
       <v-list-item-content class="header-content">
-        <v-list-item-title class="title">
+        <v-list-item-title class="headline">
           <v-scroll-x-transition>
             <v-icon
               v-if="mode === 'edit' && edit.done"
@@ -21,7 +29,7 @@
           </p>
           <p class="text">
             <v-icon class="icon" small>mdi-calendar</v-icon>
-            <span>
+            <span class="period">
               {{ post.insertTimeStamp }}
               ~
               {{ shownLimitDate }}
@@ -29,14 +37,6 @@
           </p>
         </v-list-item-subtitle>
       </v-list-item-content>
-      <v-list-item-avatar
-        :src="photoUrl"
-        @click="moveToTwitter"
-        size="80"
-        class="avatar"
-      >
-        <v-img :src="photoUrl" />
-      </v-list-item-avatar>
     </v-list-item>
     <v-card-text class="content">
       <div class="task-result">
@@ -68,7 +68,7 @@
           @click="changeStatusDone"
           depressed
           color="success"
-          width="280px"
+          class="btn"
         >
           <v-icon left>mdi-emoticon</v-icon>
           達成できた！
@@ -287,20 +287,32 @@ export default {
 </script>
 <style lang="scss">
 .post-card {
+  position: relative;
+  padding: 5px;
   > .header > .avatar {
     position: relative;
+    width: 80px;
+    max-width: 80px;
+    height: 80px;
+    transition: 0.5s;
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(189, 216, 235, 0.2);
+    }
     &::after {
+      content: '';
       display: block;
       position: absolute;
       width: inherit;
       height: inherit;
+      background-color: inherit;
+      opacity: inherit;
     }
-    &:hover::after {
-      content: '';
-      cursor: pointer;
-      background-color: #e3f2fd;
-      opacity: 0.25;
-    }
+  }
+  > .header > .id {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
   }
   > .title {
     display: block;
@@ -313,8 +325,8 @@ export default {
     padding-top: 0;
   }
   > .content > .chart {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
   }
   > .content > .text {
     margin: 0;
@@ -322,6 +334,31 @@ export default {
   }
   > .actions {
     padding: 0 16px 16px;
+  }
+  > .actions > .btn {
+    flex-grow: 1;
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .post-card {
+    > .content > .chart {
+      width: 120px;
+      height: 120px;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .post-card {
+    > .content > .chart {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  .task-result {
+    margin-top: 10px;
   }
 }
 
@@ -345,10 +382,14 @@ export default {
   > .subtitle > .text > .icon {
     margin-right: 5px;
   }
+  > .subtitle > .text > .period {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .task-result {
-  margin-left: 5px;
+  margin: 5px 0 0 5px;
   > .text {
     display: flex;
     align-items: center;
