@@ -88,7 +88,7 @@
       >
         <p class="message">こんなメッセージがツイートされます</p>
         <div class="ex">
-          <span>🎉今日の{{ title }}を達成できた！！🎉</span>
+          <span>🎉今日の{{ title }}を達成できた！！🎉 #zizoku</span>
         </div>
       </div>
     </v-expand-transition>
@@ -106,7 +106,7 @@
       >
         <p class="message">こんなメッセージがツイートされます</p>
         <div class="ex">
-          <span>今日の{{ title }}を達成できなかった...</span>
+          <span>今日の{{ title }}を達成できなかった... #zizoku</span>
         </div>
       </div>
     </v-expand-transition>
@@ -173,7 +173,15 @@ export default {
         done: false
       }
       await db.add(taskData)
+      this.clearData()
       this.$nuxt.$emit('close')
+    },
+    clearData() {
+      this.title = ''
+      this.limitTime = ''
+      this.scheduleTime = ''
+      this.successOption = false
+      this.failureOption = false
     }
   }
 }
