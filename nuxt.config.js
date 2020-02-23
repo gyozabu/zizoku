@@ -69,7 +69,8 @@ export default {
     {
       src: '~plugins/persistedstate.js',
       ssr: false
-    }
+    },
+    { src: '~plugins/ga.js', mode: 'client' }
   ],
   /*
    ** Nuxt.js dev-modules
