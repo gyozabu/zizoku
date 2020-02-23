@@ -170,6 +170,7 @@ export default {
         failureNum: 0,
         successOption: this.successOption,
         failureOption: this.failureOption,
+        isMonitored: true,
         done: false
       }
       await db.add(taskData)

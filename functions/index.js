@@ -10,15 +10,25 @@ const consumer_secret = functions.config().twitter.consumer_secret
 
 function targetTimestamp() {
   const date = new Date()
-  const Timestamp = new Date(
+  const timestamp = new Date(
     date.getFullYear(),
     date.getMonth(),
     date.getDate(),
     date.getHours(),
     date.getMinutes()
   )
-  Timestamp.setTime(Timestamp.getTime() + 1000 * 60 * 60 * 9)
-  return Timestamp
+  return timestamp
+}
+
+function tomorrowTimestamp(date) {
+  const timestamp = new Date(
+    targetTimestamp().getFullYear(),
+    targetTimestamp().getMonth(),
+    targetTimestamp().getDate() + 1,
+    date.getHours(),
+    date.getMinutes()
+  )
+  return timestamp
 }
 
 function tweet(message, userId) {
@@ -62,30 +72,25 @@ exports.batch = functions.https.onRequest(async (req, res) => {
     .get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
-        console.log(doc.data())
-        console.log('aaaaa')
         let updateData = doc.data()
-        // updateData['scheduleTimestamp'] = admin.firestore.Timestamp.fromDate(date.toDate().setDate(date.toDate() + 1))
-        /* if (doc.data().isMonitored && doc.data().limitTimestamp < targetTimestamp()) {
+        updateData['scheduleTimestamp'] = admin.firestore.Timestamp.fromDate(
+          tomorrowTimestamp(updateData['scheduleTimestamp'].toDate())
+        )
+        if (doc.data().limitTimestamp.toDate() < targetTimestamp()) {
           updateData['isMonitored'] = false
-        } */
-        if (doc.data().done) {
-          console.log(doc.data().userId + 'done the task:' + doc.data().title)
-          updateData['done'] = false
-          updateData['successNum'] = updateData['successNum'] + 1
-          if (doc.data().successOption) {
-            doneTweet(doc.data().title, doc.data().userId)
-          }
         } else {
-          console.log(
-            doc.data().userId + 'not yet do the task:' + doc.data().title
-          )
-          updateData['failureNum'] = updateData['failureNum'] + 1
-          if (doc.data().failureOption) {
-            notYetTweet(doc.data().title, doc.data().userId)
+          if (doc.data().done) {
+            updateData['done'] = false
+            if (doc.data().successOption) {
+              doneTweet(doc.data().title, doc.data().userId)
+            }
+          } else {
+            updateData['failureNum'] = updateData['failureNum'] + 1
+            if (doc.data().failureOption) {
+              notYetTweet(doc.data().title, doc.data().userId)
+            }
           }
         }
-        console.log(updateData)
         postRef.doc(doc.id).update(updateData)
       })
       return res.send('success')
