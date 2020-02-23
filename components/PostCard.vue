@@ -232,9 +232,6 @@ export default {
       const photoUrl =
         this.post && this.post.user.photoURL ? this.post.user.photoURL : ''
       return photoUrl.replace('normal', '80x80')
-    },
-    userUrl() {
-      return '/users/' + this.post.user.id
     }
   },
   created() {
