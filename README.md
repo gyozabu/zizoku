@@ -20,3 +20,8 @@ $ yarn generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+## Steup firebase cloud functions
+```
+$ firebase functions:config:set twitter.consumer_key="THE TWITTER CONSUMER KEY" twitter.consumer_secret="THE TWITTER CONSUMER SECRET"
+```
