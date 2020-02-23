@@ -232,6 +232,9 @@ export default {
       const photoUrl =
         this.post && this.post.user.photoURL ? this.post.user.photoURL : ''
       return photoUrl.replace('normal', '80x80')
+    },
+    userUrl() {
+      return '/users/' + this.post.user.id
     }
   },
   created() {
@@ -280,7 +283,8 @@ export default {
         : this.toggleTimePicker()
     },
     moveToTwitter() {
-      window.open(`https://twitter.com/${this.post.user.twitterId}`)
+      // window.open(`https://twitter.com/${this.post.user.twitterId}`)
+      this.$router.push(`/users/${this.post.userId}`)
     }
   }
 }
