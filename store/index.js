@@ -49,25 +49,25 @@ export const actions = {
       const data = doc.data()
       const user = users.find((x) => x.id === data.userId)
 
-      const insertTimeStamp = format(
-        data.insertTimeStamp.toDate(),
+      const insertTimestamp = format(
+        data.insertTimestamp.toDate(),
         'yyyy年M月d日'
       )
-      const limitTimeStamp = format(data.limitTimeStamp.toDate(), 'yyyy-M-d')
-      const limitHour = getHours(data.scheduleTimeStamp.toDate())
+      const limitTimestamp = format(data.limitTimestamp.toDate(), 'yyyy-M-d')
+      const limitHour = getHours(data.scheduleTimestamp.toDate())
       const limitMinute =
-        getMinutes(data.scheduleTimeStamp.toDate()) < 10
-          ? `0${getMinutes(data.scheduleTimeStamp.toDate())}`
-          : getMinutes(data.scheduleTimeStamp.toDate())
-      const scheduleTimeStamp = `${limitHour}:${limitMinute}`
+        getMinutes(data.scheduleTimestamp.toDate()) < 10
+          ? `0${getMinutes(data.scheduleTimestamp.toDate())}`
+          : getMinutes(data.scheduleTimestamp.toDate())
+      const scheduleTimestamp = `${limitHour}:${limitMinute}`
 
       return {
         id,
         user,
         ...data,
-        insertTimeStamp,
-        limitTimeStamp,
-        scheduleTimeStamp
+        insertTimestamp,
+        limitTimestamp,
+        scheduleTimestamp
       }
     })
     commit('setPosts', posts)
@@ -87,26 +87,26 @@ export const actions = {
     const posts = postDoc.docs.map((doc) => {
       const id = doc.id
       const data = doc.data()
-      const insertTimeStamp = format(
-        data.insertTimeStamp.toDate(),
+      const insertTimestamp = format(
+        data.insertTimestamp.toDate(),
         'yyyy年M月d日'
       )
-      const limitTimeStamp = format(data.limitTimeStamp.toDate(), 'yyyy-M-d')
+      const limitTimestamp = format(data.limitTimestamp.toDate(), 'yyyy-M-d')
 
-      const limitHour = getHours(data.scheduleTimeStamp.toDate())
+      const limitHour = getHours(data.scheduleTimestamp.toDate())
       const limitMinute =
-        getMinutes(data.scheduleTimeStamp.toDate()) < 10
-          ? `0${getMinutes(data.scheduleTimeStamp.toDate())}`
-          : getMinutes(data.scheduleTimeStamp.toDate())
-      const scheduleTimeStamp = `${limitHour}:${limitMinute}`
+        getMinutes(data.scheduleTimestamp.toDate()) < 10
+          ? `0${getMinutes(data.scheduleTimestamp.toDate())}`
+          : getMinutes(data.scheduleTimestamp.toDate())
+      const scheduleTimestamp = `${limitHour}:${limitMinute}`
 
       return {
         id,
         user,
         ...data,
-        insertTimeStamp,
-        limitTimeStamp,
-        scheduleTimeStamp
+        insertTimestamp,
+        limitTimestamp,
+        scheduleTimestamp
       }
     })
 

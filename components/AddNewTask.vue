@@ -11,7 +11,7 @@
       required
     ></v-text-field>
 
-    <!-- 時間（scheduleTimeStamp） -->
+    <!-- 時間（scheduleTimestamp） -->
     <p class="mb-0">時間</p>
     <v-menu
       ref="menu"
@@ -44,7 +44,7 @@
       </v-time-picker>
     </v-menu>
 
-    <!-- いつまで（limitTimeStamp） -->
+    <!-- いつまで（limitTimestamp） -->
     <p class="mb-0">いつまで</p>
     <v-menu
       ref="menu2"
@@ -159,17 +159,18 @@ export default {
       const taskData = {
         userId: this.user.uid,
         title: this.title,
-        scheduleTimeStamp: convertToTimestamp(
-          'scheduleTimeStamp',
+        scheduleTimestamp: convertToTimestamp(
+          'scheduleTimestamp',
           this.scheduleTime
         ),
-        limitTimeStamp: convertToTimestamp('limitTimeStamp', this.limitTime),
-        insertTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
-        updateTimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+        limitTimestamp: convertToTimestamp('limitTimestamp', this.limitTime),
+        insertTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        updateTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
         successNum: 0,
         failureNum: 0,
         successOption: this.successOption,
         failureOption: this.failureOption,
+        isMonitored: true,
         done: false
       }
       await db.add(taskData)
