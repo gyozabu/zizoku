@@ -280,7 +280,8 @@ export default {
         : this.toggleTimePicker()
     },
     moveToTwitter() {
-      window.open(`https://twitter.com/${this.post.user.twitterId}`)
+      // window.open(`https://twitter.com/${this.post.user.twitterId}`)
+      this.$router.push(`/users/${this.post.userId}`)
     }
   }
 }

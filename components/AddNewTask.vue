@@ -88,7 +88,7 @@
       >
         <p class="message">こんなメッセージがツイートされます</p>
         <div class="ex">
-          <span>🎉今日の{{ title }}を達成できた！！🎉 #zizoku</span>
+          <span>🎉xxxx年xx月xx日の{{ title }}を達成できた！！🎉 #zizoku</span>
         </div>
       </div>
     </v-expand-transition>
@@ -106,7 +106,7 @@
       >
         <p class="message">こんなメッセージがツイートされます</p>
         <div class="ex">
-          <span>今日の{{ title }}を達成できなかった... #zizoku</span>
+          <span>xxxx年xx月xx日の{{ title }}を達成できなかった... #zizoku</span>
         </div>
       </div>
     </v-expand-transition>
