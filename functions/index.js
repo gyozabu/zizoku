@@ -57,45 +57,72 @@ function tweet(message, userId) {
 }
 
 function doneTweet(title, userId) {
-  tweet('🎉今日の' + title + 'を達成できた！！🎉 #zizoku', userId)
+  const timestamp = targetTimestamp()
+  timestamp.setTime(timestamp.getTime() + 1000 * 60 * 60 * 9)
+  tweet(
+    '🎉' +
+      timestamp.getFullYear() +
+      '年' +
+      (timestamp.getMonth() + 1) +
+      '月' +
+      timestamp.getDate() +
+      '日の' +
+      title +
+      'を達成できた！！🎉 #zizoku',
+    userId
+  )
 }
 
 function notYetTweet(title, userId) {
-  tweet('今日の' + title + 'を達成できなかった... #zizoku', userId)
+  const timestamp = targetTimestamp()
+  timestamp.setTime(timestamp.getTime() + 1000 * 60 * 60 * 9)
+  tweet(
+    timestamp.getFullYear() +
+      '年' +
+      (timestamp.getMonth() + 1) +
+      '月' +
+      timestamp.getDate() +
+      '日の' +
+      title +
+      'を達成できなかった... #zizoku',
+    userId
+  )
 }
 
-exports.batch = functions.https.onRequest(async (req, res) => {
-  const postRef = db.collection('post')
-  postRef
-    .where('isMonitored', '==', true)
-    .where('scheduleTimestamp', '<', targetTimestamp())
-    .get()
-    .then((snapshot) => {
-      snapshot.forEach((doc) => {
-        let updateData = doc.data()
-        updateData['scheduleTimestamp'] = admin.firestore.Timestamp.fromDate(
-          tomorrowTimestamp(updateData['scheduleTimestamp'].toDate())
-        )
-        if (doc.data().limitTimestamp.toDate() < targetTimestamp()) {
-          updateData['isMonitored'] = false
-        } else {
-          if (doc.data().done) {
-            updateData['done'] = false
-            if (doc.data().successOption) {
-              doneTweet(doc.data().title, doc.data().userId)
-            }
+exports.scheduledFunction = functions.pubsub
+  .schedule('every 1 minutes')
+  .onRun((context) => {
+    const postRef = db.collection('post')
+    postRef
+      .where('isMonitored', '==', true)
+      .where('scheduleTimestamp', '<=', targetTimestamp())
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          let updateData = doc.data()
+          updateData['scheduleTimestamp'] = admin.firestore.Timestamp.fromDate(
+            tomorrowTimestamp(updateData['scheduleTimestamp'].toDate())
+          )
+          if (doc.data().limitTimestamp.toDate() < targetTimestamp()) {
+            updateData['isMonitored'] = false
           } else {
-            updateData['failureNum'] = updateData['failureNum'] + 1
-            if (doc.data().failureOption) {
-              notYetTweet(doc.data().title, doc.data().userId)
+            if (doc.data().done) {
+              updateData['done'] = false
+              if (doc.data().successOption) {
+                doneTweet(doc.data().title, doc.data().userId)
+              }
+            } else {
+              updateData['failureNum'] = updateData['failureNum'] + 1
+              if (doc.data().failureOption) {
+                notYetTweet(doc.data().title, doc.data().userId)
+              }
             }
           }
-        }
-        postRef.doc(doc.id).update(updateData)
+          postRef.doc(doc.id).update(updateData)
+        })
+        return true
       })
-      return res.send('success')
-    })
-    .catch((err) => {
-      return res.send(err)
-    })
-})
+      .catch(() => {
+        return true
+      })
+  })
