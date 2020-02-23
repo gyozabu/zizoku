@@ -10,15 +10,15 @@ const consumer_secret = functions.config().twitter.consumer_secret
 
 function targetTimestamp() {
   const date = new Date()
-  const timestamp = new Date(
+  const Timestamp = new Date(
     date.getFullYear(),
     date.getMonth(),
     date.getDate(),
     date.getHours(),
     date.getMinutes()
   )
-  timestamp.setTime(timestamp.getTime() + 1000 * 60 * 60 * 9)
-  return timestamp
+  Timestamp.setTime(Timestamp.getTime() + 1000 * 60 * 60 * 9)
+  return Timestamp
 }
 
 function tweet(message, userId) {
@@ -58,14 +58,14 @@ exports.batch = functions.https.onRequest(async (req, res) => {
   const postRef = db.collection('post')
   postRef
     .where('isMonitored', '==', true)
-    .where('scheduleTimeStamp', '<', targetTimestamp())
+    .where('scheduleTimestamp', '<', targetTimestamp())
     .get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
         console.log(doc.data())
         console.log('aaaaa')
         let updateData = doc.data()
-        // updateData['scheduleTimeStamp'] = admin.firestore.Timestamp.fromDate(date.toDate().setDate(date.toDate() + 1))
+        // updateData['scheduleTimestamp'] = admin.firestore.Timestamp.fromDate(date.toDate().setDate(date.toDate() + 1))
         /* if (doc.data().isMonitored && doc.data().limitTimestamp < targetTimestamp()) {
           updateData['isMonitored'] = false
         } */

@@ -30,7 +30,7 @@
           <p class="text">
             <v-icon class="icon" small>mdi-calendar</v-icon>
             <span class="period">
-              {{ post.insertTimeStamp }}
+              {{ post.insertTimestamp }}
               ~
               {{ shownLimitDate }}
             </span>
@@ -95,16 +95,16 @@
           </div>
           <div class="option -schedule-time">
             <v-text-field
-              v-model="edit.scheduleTimeStamp"
-              @change="changeOptions('scheduleTimeStamp')"
+              v-model="edit.scheduleTimestamp"
+              @change="changeOptions('scheduleTimestamp')"
               @focus="toggleTimePicker"
               label="実行時間"
               readonly
             />
             <v-dialog v-model="isOpenScheduleTimeDialog" width="290px">
               <v-time-picker
-                @change="changeTimeStamp('scheduleTimeStamp')"
-                v-model="edit.scheduleTimeStamp"
+                @change="changeTimestamp('scheduleTimestamp')"
+                v-model="edit.scheduleTimestamp"
                 scrollable
                 format="24hr"
               />
@@ -112,15 +112,15 @@
           </div>
           <div class="option -limit-date">
             <v-text-field
-              v-model="edit.limitTimeStamp"
+              v-model="edit.limitTimestamp"
               @focus="toggleDatePicker"
               label="終了日"
               readonly
             />
             <v-dialog v-model="isOpenLimitDateDialog" width="290px">
               <v-date-picker
-                @change="changeTimeStamp('limitTimeStamp')"
-                v-model="edit.limitTimeStamp"
+                @change="changeTimestamp('limitTimestamp')"
+                v-model="edit.limitTimestamp"
                 scrollable
               />
             </v-dialog>
@@ -174,10 +174,10 @@ export default {
         title: null,
         successNum: null,
         failureNum: null,
-        limitTimeStamp: null,
-        scheduleTimeStamp: null,
-        insertTimeStamp: null,
-        updateTimeStamp: null,
+        limitTimestamp: null,
+        scheduleTimestamp: null,
+        insertTimestamp: null,
+        updateTimestamp: null,
         successOption: null,
         failureOption: null,
         done: null
@@ -219,12 +219,12 @@ export default {
       }
     },
     shownLimitDate() {
-      const limitDate = this.edit.limitTimeStamp
+      const limitDate = this.edit.limitTimestamp
       if (!limitDate) return ''
       return `${limitDate.replace(/-0|-/, '年').replace(/-0|-/, '月')}日`
     },
     shownScheduleTime() {
-      const scheduleTime = this.edit.scheduleTimeStamp
+      const scheduleTime = this.edit.scheduleTimestamp
       if (!scheduleTime) return ''
       return scheduleTime.replace(/^0/, '')
     },
@@ -271,11 +271,11 @@ export default {
 
       this.updatePost({ id, data })
     },
-    changeTimeStamp(key) {
-      const timestamp = convertToTimestamp(key, this.edit[key])
+    changeTimestamp(key) {
+      const Timestamp = convertToTimestamp(key, this.edit[key])
 
-      this.changeOptions(key, timestamp)
-      key === 'limitTimeStamp'
+      this.changeOptions(key, Timestamp)
+      key === 'limitTimestamp'
         ? this.toggleDatePicker()
         : this.toggleTimePicker()
     },
