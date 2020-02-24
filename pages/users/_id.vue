@@ -114,6 +114,7 @@ export default {
     }
   },
   async created() {
+    this.clearUserPosts()
     this.$nuxt.$on('close', async () => {
       this.closeAddTaskDialog()
       this.openSnackbar()
@@ -123,7 +124,7 @@ export default {
     await this.loadUserPosts(this.$route.params.id)
   },
   methods: {
-    ...mapActions(['setUser', 'loadUserPosts']),
+    ...mapActions(['setUser', 'loadUserPosts', 'clearUserPosts']),
     openAddTaskDialog() {
       this.isOpenAddTaskDialog = true
     },
