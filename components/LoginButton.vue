@@ -19,11 +19,26 @@ export default {
           const docRef = db.collection('user').doc(result.user.uid)
           docRef.get().then(function(doc) {
             if (doc.exists) {
-              docRef.update({
+              const userData = {
                 name: result.user.displayName,
                 photoURL: result.user.providerData[0].photoURL,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 twitterId: result.additionalUserInfo.profile.screen_name
+              }
+              const secretData = {
+                twitterToken: result.credential.accessToken,
+                twitterSecret: result.credential.secret
+              }
+              db.runTransaction(function(transaction) {
+                db.collection('user')
+                  .doc(result.user.uid)
+                  .set(userData)
+                  .then(() => {
+                    db.collection('user_api')
+                      .doc(result.user.uid)
+                      .set(secretData)
+                  })
+                return Promise.resolve('transaction complete')
               })
             } else {
               const userData = {

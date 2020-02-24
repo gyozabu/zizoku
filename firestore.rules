@@ -13,7 +13,7 @@ service cloud.firestore {
       allow create,update,delete: if isAuthenticated();
     }
     match /user_api/{document=**}{
-    	allow create: if isAuthenticated();
+    	allow create, update: if isAuthenticated();
     }
   }
 }
