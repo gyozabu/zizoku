@@ -68,7 +68,9 @@ function doneTweet(title, userId) {
       timestamp.getDate() +
       '日の' +
       title +
-      'を達成できた！！🎉 #zizoku',
+      'を達成できた！！🎉 #zizoku\n' +
+      'https://zizoku.web.app/users/' +
+      userId,
     userId
   )
 }
@@ -84,7 +86,9 @@ function notYetTweet(title, userId) {
       timestamp.getDate() +
       '日の' +
       title +
-      'を達成できなかった... #zizoku',
+      'を達成できなかった... #zizoku\n' +
+      'https://zizoku.web.app/users/' +
+      userId,
     userId
   )
 }
