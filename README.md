@@ -25,3 +25,8 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 ```
 $ firebase functions:config:set twitter.consumer_key="THE TWITTER CONSUMER KEY" twitter.consumer_secret="THE TWITTER CONSUMER SECRET"
 ```
+
+## deploy hosting
+```
+$ firebase deploy --only hosting:zizoku
+```
