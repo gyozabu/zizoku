@@ -61,7 +61,11 @@
         class="chart"
       />
     </v-card-text>
-    <template v-if="mode === 'edit'">
+    <template
+      v-if="
+        mode === 'edit' && (isAuthenticated ? post.userId === user.uid : false)
+      "
+    >
       <v-card-actions class="actions">
         <v-btn
           :disabled="edit.done"
@@ -149,7 +153,7 @@
   </v-card>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import PieChart from './PieChart'
 import { convertToTimestamp } from '~/util'
 
@@ -196,6 +200,8 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
+    ...mapGetters(['isAuthenticated']),
     dataCollection() {
       const { successNum, failureNum } = this.edit
       if (successNum || failureNum) {

@@ -119,6 +119,9 @@ export const actions = {
   },
   clearPosts({ commit }, payload) {
     commit('setPosts', null)
+  },
+  clearUserPosts({ commit }, payload) {
+    commit('setUserPosts', null)
   }
 }
 
