@@ -60,6 +60,25 @@
     <v-dialog v-model="isOpenAddTaskDialog" class="dialog" max-width="600px">
       <add-new-task class="content" />
     </v-dialog>
+    <v-dialog v-model="isOpenConfirmDialog" max-width="400px">
+      <v-card>
+        <v-card-title>
+          「{{ confirmingPostName }}」を削除しますか？
+        </v-card-title>
+        <v-card-text class="text">
+          削除すると記録が全て破棄されます。
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="isOpenConfirmDialog = false" text>
+            キャンセル
+          </v-btn>
+          <v-btn @click="deleteUserPost" color="primary" text>
+            削除する
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-snackbar v-model="isOpenSnackbar">
       登録しました
       <v-btn @click="closeSnackbar" color="primary" text>
@@ -87,7 +106,9 @@ export default {
       },
       mode: 'edit',
       isOpenAddTaskDialog: false,
-      isOpenSnackbar: false
+      isOpenConfirmDialog: false,
+      isOpenSnackbar: false,
+      confirmingPostId: null
     }
   },
   computed: {
@@ -111,6 +132,13 @@ export default {
       return title
         ? filteringPosts.filter((x) => x.title.match(regExp))
         : filteringPosts
+    },
+    confirmingPostName() {
+      if (!this.confirmingPostId) return ''
+      const post = this.shownPosts.find(
+        (post) => post.id === this.confirmingPostId
+      )
+      return post ? post.title : ''
     }
   },
   async created() {
@@ -120,11 +148,19 @@ export default {
       this.openSnackbar()
       await this.loadUserPosts(this.$route.params.id)
     })
+    this.$nuxt.$on('showConfirmDialog', (postId) => {
+      this.isOpenConfirmDialog = true
+      this.confirmingPostId = postId
+    })
+    this.$nuxt.$on('hideConfirmDialog', () => {
+      this.isOpenConfirmDialog = false
+      this.confirmingPostId = null
+    })
 
     await this.loadUserPosts(this.$route.params.id)
   },
   methods: {
-    ...mapActions(['setUser', 'loadUserPosts', 'clearUserPosts']),
+    ...mapActions(['setUser', 'loadUserPosts', 'clearUserPosts', 'deletePost']),
     openAddTaskDialog() {
       this.isOpenAddTaskDialog = true
     },
@@ -136,6 +172,11 @@ export default {
     },
     closeSnackbar() {
       this.isOpenSnackbar = false
+    },
+    async deleteUserPost() {
+      this.isOpenConfirmDialog = false
+      await this.deletePost(this.confirmingPostId)
+      this.confirmingPostId = null
     }
   }
 }
@@ -175,6 +216,11 @@ export default {
   > .list > .loader {
     margin: 0 auto;
     padding-top: 200px;
+  }
+}
+.dialog > .confirm-content {
+  > .text {
+    padding-bottom: 10px;
   }
 }
 </style>

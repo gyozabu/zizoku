@@ -24,6 +24,10 @@ export const mutations = {
   },
   setUserPosts(state, payload) {
     state.userPosts = payload
+  },
+  deleteUserPost(state, id) {
+    const currentPosts = state.userPosts
+    state.userPosts = currentPosts.filter((post) => post.id !== id)
   }
 }
 
@@ -116,6 +120,13 @@ export const actions = {
     const { id, data } = payload
     const postRef = await db.collection('post').doc(id)
     await postRef.update(data)
+  },
+  async deletePost({ commit }, id) {
+    await db
+      .collection('post')
+      .doc(id)
+      .delete()
+    commit('deleteUserPost', id)
   },
   clearPosts({ commit }, payload) {
     commit('setPosts', null)

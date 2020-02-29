@@ -147,6 +147,12 @@
               inset
             />
           </div>
+          <div class="option">
+            <v-btn @click="showConfirmDialog" outlined class="btn">
+              <v-icon left>mdi-delete</v-icon>
+              達成したいことを削除する
+            </v-btn>
+          </div>
         </div>
       </v-expand-transition>
     </template>
@@ -247,7 +253,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['updatePost']),
+    ...mapActions(['updatePost', 'deletePost']),
     toggleEditor() {
       this.isOpenEditor = !this.isOpenEditor
     },
@@ -284,6 +290,9 @@ export default {
       key === 'limitTimestamp'
         ? this.toggleDatePicker()
         : this.toggleTimePicker()
+    },
+    showConfirmDialog() {
+      this.$nuxt.$emit('showConfirmDialog', this.post.id)
     },
     moveToTwitter() {
       // window.open(`https://twitter.com/${this.post.user.twitterId}`)
