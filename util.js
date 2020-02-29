@@ -7,11 +7,13 @@ export const convertToTimestamp = (key, value) => {
     const date = new Date(value)
     return Timestamp.fromDate(date)
   } else {
-    const date = new Date()
+    const currentDate = new Date()
+    const insertDate = new Date()
     const hour = value.replace(/:.*/, '')
     const minute = value.replace(/.*:/, '')
-    date.setHours(hour)
-    date.setMinutes(minute)
-    return Timestamp.fromDate(date)
+    insertDate.setHours(hour)
+    insertDate.setMinutes(minute)
+    if (currentDate > insertDate) insertDate.setDate(insertDate.getDate() + 1)
+    return Timestamp.fromDate(insertDate)
   }
 }
