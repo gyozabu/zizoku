@@ -238,7 +238,8 @@ export default {
     shownScheduleTime() {
       const scheduleTime = this.edit.scheduleTimestamp
       if (!scheduleTime) return ''
-      return scheduleTime.replace(/^0/, '')
+      const time = scheduleTime.replace(/^0/, '')
+      return time.indexOf(':') === 0 ? `0${time}` : time
     },
     photoUrl() {
       const photoUrl =
