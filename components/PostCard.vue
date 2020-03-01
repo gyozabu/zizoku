@@ -25,7 +25,7 @@
         <v-list-item-subtitle class="subtitle">
           <p class="text">
             <v-icon class="icon" small>mdi-timer</v-icon>
-            <span>{{ shownScheduleTime }}</span>
+            <span>{{ edit.scheduleTimestamp }}</span>
           </p>
           <p class="text">
             <v-icon class="icon" small>mdi-calendar</v-icon>
