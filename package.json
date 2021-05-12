@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@nuxtjs/google-analytics": "^2.2.3",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "core-js": "2.6.9",
     "date-fns": "^2.9.0",
     "nuxt": "^2.0.0",
